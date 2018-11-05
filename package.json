@@ -8,6 +8,8 @@
   },
   "dependencies": {
     "eslint": "^5.7.0",
+    "firebase": "^5.5.7",
+    "google-map-react": "^1.0.9",
     "react": "16.6.0-alpha.8af6728",
     "react-native": "0.57.3",
     "react-native-elements": "^0.19.1",

@@ -1,42 +1,74 @@
 import React, {Component} from 'react';
 import {
-  Platform, StyleSheet, Text, View
+    AsyncStorage, View, ActivityIndicator, StyleSheet,
 } from 'react-native';
+import {
+    createSwitchNavigator, createStackNavigator,
+} from 'react-navigation';
 
-const instructions = Platform.select({
-  ios: 'Press Cmd+R to reload,\n' + 'Cmd+D or shake for dev menu',
-  android:
-    'Double tap R on your keyboard to reload,\n' +
-    'Shake or press menu button for dev menu',
-});
+import HomeScreen from './components/mainform/Home';
+import SignInScreen from './components/authentication/Login';
+import RegistryScreen from './components/authentication/Registry';
+import ForgetPasswordScreen from './components/authentication/ForgetPassword';
+import MenuScreen from './components/mainform/Menu';
 
-export default class App extends Component {
-  render() {
-    return (
-      <View style={styles.container}>
-        <Text style={styles.welcome}>Welcome to React Native!</Text>
-        <Text style={styles.instructions}>To get started, edit App.js</Text>
-        <Text style={styles.instructions}>{instructions}</Text>
-      </View>
-    );
-  }
+class AuthLoadingScreen extends Component{
+    constructor(props){
+        super(props);
+        this._bootstrapAsync();
+    }
+
+    _bootstrapAsync = async () => {
+        const userToken = await AsyncStorage.getItem('userToken');
+        this.props.navigation.navigate(userToken ? 'Home' : 'Auth')
+    };
+
+    render(){
+        return (
+            <View style={styles.container}>
+                <ActivityIndicator/>           
+            </View>
+        );
+    }
+
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
+    justifyContent: 'center',
   },
 });
+
+const AuthStack = createStackNavigator({
+    SignIn : SignInScreen, Registry : RegistryScreen, 
+    ForgetPassword : ForgetPasswordScreen,
+});
+
+const AppStack = createStackNavigator({
+    Home : HomeScreen,
+    Menu: MenuScreen,
+    },
+    {
+        headerMode: 'none',
+        navigationOptions:{
+            header : null,
+        }
+    }
+
+);
+
+
+export default createSwitchNavigator(
+  {
+      AuthLoading: AuthLoadingScreen,
+      Home: AppStack,
+      Auth: AuthStack,
+  },
+  {
+      initialRouteName: 'AuthLoading',
+  },
+);
+ 
+

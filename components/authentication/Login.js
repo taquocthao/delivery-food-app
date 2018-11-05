@@ -1,66 +1,96 @@
 // import thư viện hỗ trợ
 import React, {Component} from 'react';
 import {
-    View, TextInput, Text, StyleSheet, TouchableOpacity, Alert
+    View, TextInput, Text, StyleSheet, TouchableOpacity, 
+    Alert, AsyncStorage, ScrollView,
 } from 'react-native';
 import { 
     Divider
 } from 'react-native-elements';
-import {Button , Card} from 'react-native-material-ui';
-import { createStackNavigator } from 'react-navigation';
+import {Button} from 'react-native-material-ui';
 
-// import các component
-// import Home from './mma';
+import {URL_LOGIN} from '../Url';
 
-export default class LoginPage extends Component{
-    //bỏ header trên giao diện login
-    static navigationOptions ={
+
+export default class Login extends Component{
+    
+    static navigationOptions = {
         header: null,
     }
+
     constructor(props){
         super(props);
         this.state = {
             email: '',
             password: '',
-            isEmailValid: false,
+            userDetails: '',
         }
     }
-
-    checkLogin(email, password){
-        if(email === '' || password === ''){
-            Alert.alert("email hoặc mật khẩu không được để trống")
+    // kiểm tra đăng nhập
+    checkLogin(em, pwd){
+        const url = URL_LOGIN;
+        if(em === '' || pwd === ''){
+            Alert.alert("Invalid input","Email hoặc mật khẩu không được để trống");
         }else {
-            if(email === 'ta' && password === '123'){
-                this.props.navigation.navigate('home');
-            } else{
-                Alert.alert("Sai tài khoản hay mật khẩu");
-            }
+            // gọi service kiểm tra đăng nhập
+            fetch(url,
+                {
+                    method: 'POST',
+                    headers: {
+                        'Accept' : 'application/json',
+                        'Content-Type' : 'application/json',
+                    },
+                    body: JSON.stringify({
+                        email : em,
+                        password : pwd,
+                    })
+                }
+            )
+            .then((response) => response.json())
+            .then((responseJson) => {
+                // tra ve thong tin user
+                this.setState({
+                    userDetails : JSON.stringify(responseJson),
+                }, function(){
+                    // kiêm tra kết quả trả về, nếu kết quả trả về user rỗng  -> không thành công
+                    if(responseJson.id ===  0){
+                        Alert.alert("Đăng nhập thất bại","Email hoặc mật khẩu không đúng");
+                    } else{
+                        // luư thông tin user và đi đến trang chủ
+                        this._saveUserDetails();
+                    }
+                    
+                })
+            })
+            .catch((error) => console.error(error))
         }
-    }
-   
-    // Kiểm tra giá trị nhập vào (email và password)
-    checkValidEmail(email){
-        if(email === ''){
-            
-        } else if(email != ''){
-            isEmailValid = true;
-        }
+
     }
 
+    _saveUserDetails = async () => {
+        
+        await AsyncStorage.setItem("userToken", this.state.userDetails);
+        this.props.navigation.navigate("Home");
+    }
+
+    openModalRegistry(){
+        this.props.navigation.navigate('Registry');
+    }
+    
+   
     render(){
         return (
             <View style={styles.body}>
-                {/* <View style={styles.container}> */}
-                <Card style={styles.container}> 
-                   <View style={styles.form}>
-                    
+                <View style={styles.container}>
+                {/* <Card style={styles.container}>  */}
+                   <ScrollView style={styles.form}>
                         {/* text input email */}
                         <TextInput style={styles.textinput} 
                             placeholder="Nhập email" 
                             maxLength={40}
                             keyboardType='email-address'
                             // Sự kiện rời khỏi text input email
-                            onBlur={()=> {this.checkValidEmail(this.state.email)}}
+                            // onBlur={()=> {this.checkValidEmail(this.state.email)}}
                             onChangeText={(em)=> {this.setState({email: em})}}/>
                         {/* text input password */}
                         <TextInput style={styles.textinput} 
@@ -71,16 +101,14 @@ export default class LoginPage extends Component{
 
                         <View style={{marginTop: 20, alignItems: 'flex-end'}}>
                             {/* Button login */}
-                           {/* <TouchableOpacity style={styles.button} onPress={ () => 
+                           <TouchableOpacity style={styles.button} onPress={ () => 
                             this.checkLogin(this.state.email, this.state.password) 
                             } >
                                <View>
                                    <Text>Đăng nhập</Text>
                                </View>
-                           </TouchableOpacity> */}
-                           <Button raised primary text="Login" onPress={()=> {
-                               this.checkLogin(this.state.email, this.state.password)}
-                            }/>
+                           </TouchableOpacity>
+                           
                         </View>
                         <View style={styles.backgroudLabel}>
                             {/* chuyển đến giao diện quên mật khẩu */}
@@ -93,7 +121,7 @@ export default class LoginPage extends Component{
                                 <View style={{flexDirection: 'row',}}>
                                     <Text>Chưa có tài khoản? </Text>
                                     {/* chuyển đến component đăng ký */}
-                                    <TouchableOpacity>
+                                    <TouchableOpacity onPress={ () => {this.openModalRegistry()}}>
                                         <View>
                                             <Text style={{fontWeight: 'bold',}}>Đăng ký ngay</Text>
                                         </View>
@@ -113,48 +141,33 @@ export default class LoginPage extends Component{
                                 <Button raised primary text="Facebook"/>
                             </View>
                         </View>
-                   </View>
-                {/* </View> */}
-                </Card>
+                   </ScrollView>
+                </View>
+                {/* </Card> */}
             </View>
         );
     }
 }
 
-// khai báo các màn hình (components)
-const RootStack = createStackNavigator(
-    {
-        login: {
-            screen: LoginPage,
-        },
-        home: Home,
-    },
-    {
-        initialRouteName: 'login',
-    },
-
-);
-
-export default class Login extends Component{
-    render(){
-        return (
-            <RootStack />
-        );
-    }
-}
-
+// const otherStack = createStackNavigator({
+//     Registry : RegistryModal,
+//     ForgetPassword : ForgetPasswordModal,
+// });
 
 const styles = StyleSheet.create({
     body: {
         flex: 1,
-        justifyContent: 'center',
         padding: 15,
     },
     container:{
+        flex: 1,
         borderRadius: 5,
+        borderColor: 'grey',
+        borderWidth: 1,
     },
     form: {
         padding: 10,
+        flex: 1,
     },
     textinput:{
         borderBottomColor: 'grey',

@@ -1,8 +1,13 @@
 // import thư viện
 import React, {Component} from 'react';
-import {View, Text ,TextInput, StyleSheet} from 'react-native';
+import {
+    View, Text ,TextInput, StyleSheet, TouchableOpacity,
+} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { createBottomTabNavigator } from 'react-navigation';
+import { 
+    createBottomTabNavigator,
+    createStackNavigator,
+} from 'react-navigation';
 
 
 // import các component
@@ -10,11 +15,17 @@ import OrderHistoryScreen from './OrderHistoryScreen.js';
 import NotificationScreen from './NotificationScreen.js';
 import ProfileScreen from './ProfileScreen.js';
 import SlideShow from './SlideShow.js'
-import { red } from 'ansi-colors';
+import TopSellerForm from './TopSellerForm.js';
 
-
+import MenuScreen from './Menu.js';
 
 class HomeScreen extends Component{
+
+
+    ShowMoreMenu(){
+        this.props.navigation.navigate('Menu');
+    }
+
     render(){
         return (
             // wrapper
@@ -36,10 +47,20 @@ class HomeScreen extends Component{
                             <SlideShow />
                         </View>
                     </View>
+
+                    <View style={styles.box}>
+                        <Text>Top bán chạy</Text>
+                        <TouchableOpacity onPress={ () => {this.ShowMoreMenu()}}>
+                            <View style={styles.buttonMenu}>
+                                <Text style={styles.textMenu}>Xem menu</Text>
+                            </View>
+                        </TouchableOpacity>
+                    </View>
+                    
                     {/* danh sách top bán chạy */}
                     <View style={styles.categoryForm}>
                         <View style={styles.card}>
-
+                            <TopSellerForm />
                         </View>
                     </View>
                 </View>
@@ -48,8 +69,6 @@ class HomeScreen extends Component{
         );
     }
 }
-
-
 
 export default createBottomTabNavigator(
     {
@@ -78,8 +97,8 @@ export default createBottomTabNavigator(
         tabBarOptions:{
             activeTintColor: 'red',
             inactiveTintColor: 'gray',
-        }
-    }
+        },
+    },
 );
 
 const styles = StyleSheet.create({
@@ -127,6 +146,21 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         borderColor: 'gray',
         borderBottomWidth: 2,
-        zIndex: 1,  
-    }
+        zIndex: 1,
+        shadowOffset: {
+            width: 1,
+            height: 2,
+        },
+        shadowOpacity: 0.3,
+    },
+    box: {
+        padding: 10,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+    },
+    textMenu: {
+        borderBottomWidth: 1, 
+        borderColor: 'gray',
+        color: 'red',
+    },
 });

@@ -3,13 +3,11 @@ import {
     View, Text,
 } from 'react-native';
 
-export default class Notification extends Component{
-    
-
+export default class ForgetPassword extends Component{
     render(){
         return (
             <View>
-                <Text>Notification</Text>
+                <Text>ForgetPassword</Text>
             </View>
         );
     }
