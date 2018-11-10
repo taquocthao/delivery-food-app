@@ -13,11 +13,27 @@ export default class FoodList extends Component{
         super(props);
         this.state = {
             product : [],
+            categoryId : props.categoryId,
         }
     }
 
-    componentDidMount(){
-        const url = URL_PRODUCTS;
+    // componentDidMount(){
+    //     // .../products/{categoryId}
+    //     const url = URL_PRODUCTS;
+    //     fetch(url)
+    //     .then((response) => response.json())
+    //     .then((responseJson) => {
+    //         this.setState({
+    //             product : responseJson,
+    //         });
+    //     })
+    //     .catch((err) => {console.error(err)})
+    // }
+
+
+    componentWillReceiveProps(nextProps){
+        // this.setState({ categoryId : nextProps.categoryId });
+        const url = URL_PRODUCTS + nextProps.categoryId;
         fetch(url)
         .then((response) => response.json())
         .then((responseJson) => {
@@ -61,6 +77,7 @@ export default class FoodList extends Component{
         return (
             <FlatList 
                 data={this.state.product}
+                extraData={this.state}
                 keyExtractor={this.keyExtractor}
                 renderItem={this.renderItem}
             />
