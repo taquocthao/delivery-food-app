@@ -129,6 +129,7 @@ const styles = StyleSheet.create({
         zIndex: 1,
         position: "absolute",
         backgroundColor: '#fff',
+        opacity: 0.8,
     }
     ,
     inputSearch:{

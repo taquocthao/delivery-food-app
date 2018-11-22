@@ -1,10 +1,13 @@
 import React, {Component} from 'react';
 import {
-    View, Text, Picker, StyleSheet, TextInput, Dimensions, Alert,
+    View, Text, Picker, StyleSheet, TextInput, Dimensions, Alert, TouchableOpacity,
 } from 'react-native';
+
+
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import FoodList from './FoodList.js';
 import {URL_PRODUCT_CATEGORY} from '../Url';
+import FooterCart from './FooterCart';
 
 export default class Menu extends Component{
 
@@ -13,9 +16,12 @@ export default class Menu extends Component{
         this.state = {
             dataProductCategory: [],
             item : '',
+            // cartVisible : false,
         }
     }
 
+    // sau khi khởi tạo component, sẽ gọi đến hàm did mount.
+    // trong hàm này, dữ liệu sẽ được lấy từ api và đổ vào state dataProductCategory.
     componentDidMount(){
         const url = URL_PRODUCT_CATEGORY;
         fetch(url)
@@ -28,21 +34,20 @@ export default class Menu extends Component{
         .catch((err) => {console.error(err)})
     }
 
+    // hàm được gọi khi giá trị loại sản phẩm được thay đổi
     onValueChangePicker(itemValue, itemIndex){
         this.setState({
             item : itemValue,
-        }, function(){
-            // Alert.alert("" + itemValue );
-            // sau khi thay doi loai thuc pham
-
         });
     }
 
-    
-
     render(){
         return (
+            // View tổng quát
             <View style={styles.container}>
+                {/* phần đầu của giao diện menu.
+                    gồm : bộ tìm kiếm, picker loại sản phẩm
+                */}
                 <View style={styles.header}>
                     <View style={styles.search}>
                         <Ionicons  name='ios-search' size={32}/>
@@ -56,16 +61,23 @@ export default class Menu extends Component{
                             selectedValue={this.state.item}
                             style={styles.picker}
                             onValueChange={(itemValue, itemIndex) => {this.onValueChangePicker(itemValue, itemIndex)} }>
-                            < Picker.Item label="Tất cả" value={0}/>
+                            < Picker.Item label="Tất cả" value=""/>
                             {this.state.dataProductCategory.map(
                                 (item, key) => (< Picker.Item label={item.name} value={item.id} key={key}/>)
                                 )}
                         </Picker>
                     </View>
                 </View>
-
+                {/* phần thân: hiển thị danh sách thực phẩm của cửa hàng,
+                    nó sẽ hiển thị dựa vào loại sản phẩm mà khách hàng lựa chọn.
+                    mặc định sẽ hiển thị "Tất cả"
+                */}
                 <View style={styles.body}>
-                    <FoodList categoryId={this.state.item === 0 ? '' : this.state.item}/>
+                    <FoodList categoryId={this.state.item === "" ? '' : this.state.item}/>
+                </View>
+                {/* footer: hiển thị giỏ hàng và nút giao hàng */}
+                <View style={styles.footer}>
+                    <FooterCart />
                 </View>
             </View>
         );
@@ -79,15 +91,15 @@ const styles = StyleSheet.create({
     },
     header:{
         flex: 1,
-
     },
     body:{
-        flex : 2,
+        flex : 3,
         borderWidth: 0.5,
         borderColor: 'gray'
     },
     footer:{
-
+        
+        flex: 0.4,
     },
     search:{
         flex: 1,
@@ -105,7 +117,7 @@ const styles = StyleSheet.create({
         marginLeft: 5,
     },
     pickerBox:{
-        flex: 2,
+        flex: 1,
         borderWidth: 1,
         borderColor: 'grey',
         alignItems: 'center',
