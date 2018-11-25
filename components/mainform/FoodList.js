@@ -1,13 +1,12 @@
 import React, {Component} from 'react';
 import {
     FlatList, Image, Text, TouchableOpacity, 
-    StyleSheet, View, Alert, Modal, Dimensions, AsyncStorage,
+    StyleSheet, View, Dimensions,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {URL_PRODUCTS} from '../Url';
 
 import ModalAddFood from './ModalAddFood';
-import FooterCart from './FooterCart';
 import global from '../global';
 
 export default class FoodList extends Component{
@@ -20,7 +19,6 @@ export default class FoodList extends Component{
             product: {},
             categoryId : props.categoryId,
             modalVisible : false,
-            // cartVisible : false,
         }
     }
 
@@ -73,37 +71,6 @@ export default class FoodList extends Component{
     }
 
     
-    
-
-    // lưu dữ liệu các món đã chọn
-    async storingProducts(key, item){
-        try{
-            //kiểm món ăn đã dược gọi trước đó hay chưa
-            var existsProducts = await AsyncStorage.getItem('products');
-            
-            if(existsProducts === null){ // chưa có sản phẩm trong data
-                this.state.productsStoring.push(item);
-            } else{ // đã có sản phẩm trong data
-                // kiểm tra sản phẩm mới có trùng với sản phẩm trong data hay không
-                const exitsItem =  this.state.productsStoring.find(element => element.id === item.id);
-               
-                if(exitsItem != undefined){
-                    console.log("da trung");
-                    return false;
-                } else {
-                    this.state.productsStoring.push(item);
-                }
-            }
-            await AsyncStorage.setItem(key, JSON.stringify(this.state.productsStoring));
-            return true;
-            
-        } catch(err){
-            Alert.alert("Lỗi lưu dữ liệu", "lỗi -> " + err);
-        }
-        return false;
-    }
-
-
     addToCart({item}){
         // Alert.alert("add", "you have choosen item " + item.name);
         

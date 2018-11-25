@@ -4,8 +4,8 @@ import {
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import global from '../global';
-
-
+import retrieveProducts from '../data/GetProducts';
+import saveProducts from '../data/SaveProducts';
 export default class FooterCart extends Component{
 
     constructor(props){
@@ -18,41 +18,44 @@ export default class FooterCart extends Component{
             cartArray: [],
         }
         global.addProductToCart = this.addProductToCart.bind(this);
+
     }
 
     componentDidMount(){
-       this.retrieveProducts('products');
+       retrieveProducts()
+       .then(items => this.setState({cartArray : items}))
+       .then(this.setState({visible : true}));
     }
 
-    componentWillReceiveProps(nextProps){
-      
-    }
-
+    // lưu sản phẩm đã chọn vào data
     addProductToCart(product){
         this.setState({
-            cartArray : this.state.cartArray.concat(product),
+            cartArray : this.state.cartArray.concat({product, quantity: 1}),
             visible : true,
+        }, function(){
+            saveProducts(this.state.cartArray);
         });
+        console.log(this.state.cartArray);
     }
-
-    async retrieveProducts(key){
-        try{
-            const value = await AsyncStorage.getItem(key);
-            if(value !== null){
-                const items = JSON.parse(value);
-                this.setState({
-                    products: items,
-                    visible: true,
-                }, function(){
-                    this.setState({count : this.state.products.length});
-                    return true;
-                });
-            } 
-        } catch(err){
-            Alert.alert("Lỗi khi lấy dữ liệu", "Lỗi " + err);
-        }
-        return false;
-    }
+    
+    // async retrieveProducts(key){
+    //     try{
+    //         const value = await AsyncStorage.getItem(key);
+    //         if(value !== null){
+    //             const items = JSON.parse(value);
+    //             this.setState({
+    //                 products: items,
+    //                 visible: true,
+    //             }, function(){
+    //                 this.setState({count : this.state.products.length});
+    //                 return true;
+    //             });
+    //         } 
+    //     } catch(err){
+    //         Alert.alert("Lỗi khi lấy dữ liệu", "Lỗi " + err);
+    //     }
+    //     return false;
+    // }
 
     async clearProducts(key){
         try{
@@ -65,7 +68,7 @@ export default class FooterCart extends Component{
     }
 
     stepToOrder(){
-        if(this.clearProducts('products')){
+        if(this.clearProducts('@cart')){
             Alert.alert("xoa thanh cong");
         }
     }
