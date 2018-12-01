@@ -72,15 +72,7 @@ export default class FoodList extends Component{
 
     
     addToCart({item}){
-        // Alert.alert("add", "you have choosen item " + item.name);
         
-        // this.storingProducts('products', item)
-        //     .then((value) => {
-        //         this.setState({ 
-        //             cartVisible: true,
-        //             modalVisible: false,  })
-        //     }).catch((err) => {console.log(err)});
-
         global.addProductToCart(item);
 
     }

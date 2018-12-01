@@ -5,13 +5,14 @@ const retrieveProducts = async ()  => {
         const cartArray = await AsyncStorage.getItem('@cart');
         if(cartArray !== null){
             // console.log("we have data");
-            return JSON.parse(cartArray);
+            // return JSON.parse(cartArray);
+            return cartArray;
         }
     } catch(err){
         // console.log(err);
-        return [];
+        return null;
     }
     // console.log("we don't have data");
-    return [];
+    return null;
 };
 export default retrieveProducts;

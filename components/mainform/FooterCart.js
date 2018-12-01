@@ -6,6 +6,8 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import global from '../global';
 import retrieveProducts from '../data/GetProducts';
 import saveProducts from '../data/SaveProducts';
+import ModalShoppingCart from '../mainform/ModalShoppingCart';
+
 export default class FooterCart extends Component{
 
     constructor(props){
@@ -16,50 +18,75 @@ export default class FooterCart extends Component{
             count : 0,
             visible : false,
             cartArray: [],
+            // retrieveArray: '',
+            modalVisible: false,
         }
         global.addProductToCart = this.addProductToCart.bind(this);
-
+        global.deleteCart = this.deleteCart.bind(this);
     }
 
     componentDidMount(){
        retrieveProducts()
-       .then(items => this.setState({cartArray : items}))
-       .then(this.setState({visible : true}));
+       .then(items => {
+            if(items !== null){
+                // console.log("visible : true");
+                this.setState({
+                    cartArray : JSON.parse(items),
+                    visible : true
+                });
+            }
+       });
+    }
+
+    componentWillReceiveProps(){
+        this.setState({
+            modalVisible: false,
+        });
     }
 
     // lưu sản phẩm đã chọn vào data
     addProductToCart(product){
-        this.setState({
-            cartArray : this.state.cartArray.concat({product, quantity: 1}),
-            visible : true,
-        }, function(){
-            saveProducts(this.state.cartArray);
-        });
-        console.log(this.state.cartArray);
+        //kiểm tra sản phẩm tồn tại trong giỏ hàng
+        const existsProduct = this.state.cartArray.findIndex(e => e.product.id == product.id);
+        console.log(existsProduct);
+        if(existsProduct === -1){
+            // console.log('Chua ton tai');
+            this.setState({
+                cartArray : this.state.cartArray.concat({product: product, quantity: 1}),
+                visible : true,
+                modalVisible: false,
+            }, function(){
+                saveProducts(this.state.cartArray);
+            });
+        }else{
+            // console.log("ton tai");
+            this.state.cartArray[existsProduct] = {
+                product: product, quantity : this.state.cartArray[existsProduct].quantity + 1};
+            this.setState({
+                cartArray : this.state.cartArray,
+                modalVisible: false,
+                visible : true,
+            }, function(){
+                saveProducts(this.state.cartArray);
+            });
+        }
+       
     }
     
-    // async retrieveProducts(key){
-    //     try{
-    //         const value = await AsyncStorage.getItem(key);
-    //         if(value !== null){
-    //             const items = JSON.parse(value);
-    //             this.setState({
-    //                 products: items,
-    //                 visible: true,
-    //             }, function(){
-    //                 this.setState({count : this.state.products.length});
-    //                 return true;
-    //             });
-    //         } 
-    //     } catch(err){
-    //         Alert.alert("Lỗi khi lấy dữ liệu", "Lỗi " + err);
-    //     }
-    //     return false;
-    // }
+    deleteCart(){
+        this.clearCart().then(
+            this.setState({
+                visible : false,
+                count : 0,
+                cartArray : [], 
+            })
+        );
+    }
 
-    async clearProducts(key){
+    async clearCart(){
         try{
-            await AsyncStorage.removeItem(key);
+            await AsyncStorage.removeItem("@cart");
+            
             return true;
         } catch(err){
             console.log(err);
@@ -68,41 +95,42 @@ export default class FooterCart extends Component{
     }
 
     stepToOrder(){
-        if(this.clearProducts('@cart')){
-            Alert.alert("xoa thanh cong");
-        }
+        
     }
 
     showShoppingCart(){
         // Alert.alert("test");
-        
+        this.setState({modalVisible: true});
     }
 
     render(){
         return (
-            <View style={styles.body}>
-                <View style={styles.footerLeft}>
-                    <TouchableOpacity onPress={()=> {this.showShoppingCart()}}>
-                        <View style={styles.cartInfo}>
-                            <View style={styles.cart}>
-                                <Ionicons name="ios-cart" size={32} color='#fff'
-                                style={{position: 'relative'}}/>
-                                <Text style={this.state.visible == true ? styles.badge : styles.hiddenBadge}>
-                                    {this.state.cartArray.length}
-                                </Text>
+            <View style={{flex: 1}}>
+                <View style={styles.body}>
+                    <View style={styles.footerLeft}>
+                        <TouchableOpacity onPress={()=> {this.showShoppingCart()}}>
+                            <View style={styles.cartInfo}>
+                                <View style={styles.cart}>
+                                    <Ionicons name="ios-cart" size={32} color='#fff'
+                                    style={{position: 'relative'}}/>
+                                    <Text style={this.state.visible == true ? styles.badge : styles.hiddenBadge}>
+                                        {this.state.cartArray.length}
+                                    </Text>
+                                </View>
+                                <Text style={styles.textPrice}>{this.state.totalPrice}đ</Text>
                             </View>
-                            <Text style={styles.textPrice}>{this.state.totalPrice}đ</Text>
-                        </View>
-                    </TouchableOpacity>
+                        </TouchableOpacity>
+                    </View>
+                    <View style={styles.footerRight}>
+                        <TouchableOpacity onPress={()=>{this.stepToOrder()}}>
+                            <View style={styles.button}>
+                                <Text style={{color: '#fff'}}>Giao hàng</Text>
+                                <Ionicons name="ios-arrow-round-forward" size={24} color='#fff'/>
+                            </View>
+                        </TouchableOpacity>
+                    </View>
                 </View>
-                <View style={styles.footerRight}>
-                    <TouchableOpacity onPress={()=>{this.stepToOrder()}}>
-                        <View style={styles.button}>
-                            <Text style={{color: '#fff'}}>Giao hàng</Text>
-                            <Ionicons name="ios-arrow-round-forward" size={24} color='#fff'/>
-                        </View>
-                    </TouchableOpacity>
-                </View>
+                <ModalShoppingCart visible={this.state.modalVisible}/>
             </View>
         );
     }
