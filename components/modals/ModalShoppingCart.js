@@ -4,7 +4,7 @@ import {
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 // import FooterCart from './FooterCart';
-import ListProduct from './ListProductInCart';
+import ListProduct from '../subcomponent/ListProductInCart';
 import global from '../global';
 
 export default class ShoppingCart extends Component{
@@ -40,7 +40,8 @@ export default class ShoppingCart extends Component{
                 transparent={false}
                 visible={this.state.modalVisible}
                 onRequestClose={ () => {
-                    Alert.alert('modal have been closed');
+                    // Alert.alert('modal have been closed');
+                    this.setState({modalVisible: false,})
                 }}
              >
                 <View style={container}>

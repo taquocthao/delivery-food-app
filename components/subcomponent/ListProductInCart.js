@@ -4,7 +4,8 @@ import {
 } from 'react-native';
 
 import retrieveProducts from '../data/GetProducts';
-import ChangeValueButton from './IncreaseDecreaseButton';
+import ChangeValueButton from '../subcomponent/IncreaseDecreaseButton';
+// import global from '../global';
 
 export default class ListProduct extends Component{
 
@@ -14,6 +15,7 @@ export default class ListProduct extends Component{
             products : [],
             isClearCart : props.isClearCart,
         }
+        
     }
 
     componentDidMount(){
@@ -44,7 +46,7 @@ export default class ListProduct extends Component{
                 </View>
                 {/* right view */}
                 <View style={right}>
-                    <ChangeValueButton currentValue={item.quantity} />
+                    <ChangeValueButton productId={item.product.id} currentValue={item.quantity} />
                 </View>
             </View>
         );

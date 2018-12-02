@@ -4,9 +4,10 @@ import {
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import global from '../global';
+// import các component
 import retrieveProducts from '../data/GetProducts';
 import saveProducts from '../data/SaveProducts';
-import ModalShoppingCart from '../mainform/ModalShoppingCart';
+import ModalShoppingCart from '../modals/ModalShoppingCart';
 
 export default class FooterCart extends Component{
 
@@ -22,6 +23,8 @@ export default class FooterCart extends Component{
             modalVisible: false,
         }
         global.addProductToCart = this.addProductToCart.bind(this);
+        global.decreaseProduct = this.decreaseProduct.bind(this);
+        global.increaseProduct = this.increaseProduct.bind(this);
         global.deleteCart = this.deleteCart.bind(this);
     }
 
@@ -70,7 +73,33 @@ export default class FooterCart extends Component{
                 saveProducts(this.state.cartArray);
             });
         }
-       
+    }
+
+    increaseProduct(productId){
+        
+        const newCart = this.state.cartArray.map(item => {
+            if(item.product.id !== productId)
+                return item;
+            return {product: item.product, quantity : item.quantity + 1};
+        });
+        this.setState({
+            cartArray : newCart,
+        }, function(){
+            saveProducts(this.state.cartArray);
+        });
+    }
+
+    decreaseProduct(productId){
+        const newCart = this.state.cartArray.map(item => {
+            if(item.product.id !== productId)
+                return item;
+            return {product: item.product, quantity : item.quantity - 1};
+        });
+        this.setState({
+            cartArray : newCart,
+        }, function(){
+            saveProducts(this.state.cartArray);
+        });
     }
     
     deleteCart(){

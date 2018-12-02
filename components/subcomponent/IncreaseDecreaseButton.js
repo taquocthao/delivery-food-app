@@ -11,17 +11,20 @@ export default class ChangeValueButton extends Component{
     constructor(props){
         super(props);
         this.state = {
-            // count : 0,
             currentValue : props.currentValue,
+            productId: props.productId,
         }
     }
 
-    decreaseProduct(){
-        global.decreaseProduct();
+    decreaseProduct(productId){
+        global.decreaseProduct(productId);
+        this.setState({currentValue : this.state.currentValue - 1});
     }
 
-    increaseProduct(){
-        global.increaseProduct();
+    increaseProduct(productId){
+        global.increaseProduct(productId);
+        this.setState({currentValue : this.state.currentValue + 1});
+
     }
 
     render(){
@@ -33,7 +36,7 @@ export default class ChangeValueButton extends Component{
                 <View style={container}>
                     {/* decrease button */}
                     <View style={left}>
-                        <TouchableOpacity onPress={()=>{this.decreaseProduct()}}>
+                        <TouchableOpacity onPress={()=>{this.decreaseProduct(this.state.productId)}}>
                             <View style={decrease}>
                                 <Ionicons name="ios-remove" size={24} color='red'/>
                             </View>
@@ -47,7 +50,7 @@ export default class ChangeValueButton extends Component{
                     </View>
                     {/* increase button */}
                     <View style={right}>
-                        <TouchableOpacity onPress={()=>{this.increaseProduct()}}>
+                        <TouchableOpacity onPress={()=>{this.increaseProduct(this.state.productId)}}>
                             <View style={increase}>
                                 <Ionicons name="ios-add" size={24} color='blue'/>
                             </View>

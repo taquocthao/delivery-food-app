@@ -4,7 +4,9 @@ import {
     TouchableOpacity, Image, TextInput,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-
+import global from '../global';
+// import các component
+import ChangeValueButton from '../subcomponent/ChangeValueButton';
 export default class ModalAddFood extends Component{
 
     constructor(props){
@@ -15,7 +17,9 @@ export default class ModalAddFood extends Component{
             count : 1,
             totalPrice: '0',
         };
-        
+        global.increaseProduct = this.increaseProduct.bind(this);
+        global.decreaseProduct = this.decreaseProduct.bind(this);
+
     }
 
     componentWillReceiveProps(nextProps){
@@ -32,102 +36,93 @@ export default class ModalAddFood extends Component{
         });
     }
 
-    decreaseCount(){
+    decreaseProduct(){
         var value = this.state.count;
         if(value <= 1){
             this.setState({count : 1});
         } else{
             this.setState({count : this.state.count - 1});  
         }
+        console.log('decrease');
     }
 
-    increaseCount(){
+    increaseProduct(){
         this.setState({count : this.state.count + 1});
+        console.log('increase');
+
     }
 
 
 
     render(){
-        return (
-           
+        const {modal, contentModal, header, closeButton, text,
+             body, detailBox, leftDetail, rightDetail, details, textPrice, 
+             iconCart, textBooked, choiceNumber, noteBox, footer, addButton, } = styles;
+        return (   
             <Modal
                 animationType="slide"
                 transparent={true}
                 visible={this.state.modalVisible}
                 onRequestClose={ () => {
-                    Alert.alert("modal has been closed");
+                    // Alert.alert("modal has been closed");
+                    this.setState({modalVisible : false});
                 }}>
                 {/* background modal */}
-                <View style={styles.modal}>
+                <View style={modal}>
                     {/* background content modal */}
-                    <View style={styles.contentModal}>
+                    <View style={contentModal}>
                         {/* header content modal */}
-                        <View style={styles.header}>
+                        <View style={header}>
                             <TouchableOpacity onPress={ () => {
                                     this.setModalVisible(!this.state.modalVisible);} }>
-                                <View style={styles.closeButton}>
+                                <View style={closeButton}>
                                     <Ionicons name='ios-close' size={32} color="white"/>
                                 </View>
                             </TouchableOpacity>
-                            <Text style={styles.text}>Thêm món</Text>
+                            <Text style={text}>Thêm món</Text>
+                            
                         </View>
                         {/* body cotent modal */}
-                        <View style={styles.body}>
-                            <View style={styles.detailBox}>
+                        <View style={body}>
+                            <View style={detailBox}>
                                 {/* left column */}
-                                <View style={styles.left}>
+                                <View style={leftDetail}>
                                     <Image source={{uri: this.state.item.image}} style={styles.image}></Image>
                                 </View>
                                 {/* right column */}
-                                <View style={styles.right}>
-                                    <View style={styles.details}>
+                                <View style={rightDetail}>
+                                    <View style={details}>
                                         <Text >{this.state.item.name}</Text>
-                                        <Text style={styles.textPrice}>{this.state.item.price}</Text>
-                                        <View style={styles.iconCart}>
+                                        <Text style={textPrice}>{this.state.item.price}</Text>
+                                        <View style={iconCart}>
                                             <Ionicons name='ios-cart' size={12}/>
-                                            <Text style={styles.textBooked}>{this.state.item.timesBooked}</Text>
+                                            <Text style={textBooked}>{this.state.item.timesBooked}</Text>
                                         </View>
                                     </View>
-                                    <View style={styles.choiceNumber}>
-                                        <View style={styles.choiceBox}>
-                                            <View style={styles.box}>
-                                                <TouchableOpacity onPress={() => {this.decreaseCount()}}>
-                                                    <View style={styles.decreaseButton}>
-                                                        <Ionicons name='ios-remove' size={24}></Ionicons>
-                                                    </View>
-                                                </TouchableOpacity>
-                                            </View>
-                                            <View style={styles.box}>
-                                                <Text style={styles.textCount}>{this.state.count}</Text>
-                                            </View>
-                                            <View style={styles.box}>
-                                                <TouchableOpacity onPress={() => {this.increaseCount()}}>
-                                                    <View style={styles.increaseButton}>
-                                                        <Ionicons name='ios-add' size={24}></Ionicons>
-                                                    </View>
-                                                </TouchableOpacity>
-                                            </View>
-                                        </View>
+                                    <View style={choiceNumber}>
+                                        {/* component change value */}
+                                        <ChangeValueButton productId={this.state.item.id} 
+                                        currentValue={this.state.count}/>
                                     </View>
                                 </View>
                             </View>
-                            <View style={styles.noteBox}>
+                            <View style={noteBox}>
                                 <TextInput placeholder="Thêm ghi chú"></TextInput>
                             </View>
                         </View>
 
-                        <View style={styles.footer}>
+                        <View style={footer}>
                             <View>
                                 <TouchableOpacity onPress={ () => {
                                     this.setModalVisible(!this.state.modalVisible);}}>
-                                    <View style={styles.addButton}>
-                                        <Text style={styles.text}>Thêm vào giỏ</Text>
+                                    <View style={addButton}>
+                                        <Text style={text}>Thêm vào giỏ</Text>
                                     </View>
                                     
                                 </TouchableOpacity>
                             </View>
                             <View>
-                                <Text style={styles.text}>{this.state.item.price*this.state.count}</Text>
+                                <Text style={text}>{this.state.item.price*this.state.count}</Text>
                             </View>
                             
                         </View>
@@ -146,24 +141,22 @@ const heightContenModal = heightDevice - 100;
 const styles = StyleSheet.create({
     modal:{
         flex: 1,
-        backgroundColor: "#00000080",
+        // backgroundColor: "#00000080",
         justifyContent: 'center',
         padding: 20,
     },
     contentModal:{
         backgroundColor: "#ffffff",
         height: heightContenModal,
-        justifyContent: 'space-between',
+        // justifyContent: 'space-between',
     },
     header:{
         backgroundColor: "#0288ff",
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'flex-start',
     },
     closeButton:{
-        color: '#fff',
-        padding: 15,
+        margin: 15,
     },
     body:{
         backgroundColor: '#fff',
@@ -178,7 +171,7 @@ const styles = StyleSheet.create({
         flex: 4,
         margin: 5,
     },
-    left:{
+    leftDetail:{
         flex: 1,
         marginRight: 5,
     },
@@ -186,7 +179,7 @@ const styles = StyleSheet.create({
         flex: 1,
         margin: 2,
     },
-    right:{
+    rightDetail:{
         flex: 3,
         flexDirection: 'row',
     },
@@ -208,9 +201,7 @@ const styles = StyleSheet.create({
         marginLeft: 5,
     },
     choiceNumber:{
-        flexDirection: 'row',
         flex: 1,
-        alignItems: 'center',
     },
     choiceBox:{
         flexDirection: 'row',

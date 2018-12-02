@@ -2,12 +2,12 @@ import React, {Component} from 'react';
 import {
     View, Text, Picker, StyleSheet, TextInput, Dimensions, Alert, TouchableOpacity,
 } from 'react-native';
-
-
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import FoodList from './FoodList.js';
+
+// import các component
+import FoodList from '../subcomponent/FoodList';
 import {URL_PRODUCT_CATEGORY} from '../Url';
-import FooterCart from './FooterCart';
+import FooterCart from '../subcomponent/FooterCart';
 
 export default class Menu extends Component{
 
@@ -16,7 +16,6 @@ export default class Menu extends Component{
         this.state = {
             dataProductCategory: [],
             item : '',
-            // cartVisible : false,
         }
     }
 

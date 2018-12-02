@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {
-    View, Text, FlatList, StyleSheet, Image, Dimensions, ActivityIndicator,
+    View, Text, FlatList, StyleSheet, Image, Dimensions,
 } from 'react-native';
 
 import {URL_TOPSELLER} from '../Url';

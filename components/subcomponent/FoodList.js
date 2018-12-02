@@ -6,7 +6,8 @@ import {
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {URL_PRODUCTS} from '../Url';
 
-import ModalAddFood from './ModalAddFood';
+// import các component
+import ModalAddFood from '../modals/ModalAddFood';
 import global from '../global';
 
 export default class FoodList extends Component{

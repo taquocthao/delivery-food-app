@@ -6,7 +6,6 @@ import {
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { 
     createBottomTabNavigator,
-    createStackNavigator,
 } from 'react-navigation';
 
 
@@ -14,10 +13,9 @@ import {
 import OrderHistoryScreen from './OrderHistoryScreen.js';
 import NotificationScreen from './NotificationScreen.js';
 import ProfileScreen from './ProfileScreen.js';
-import SlideShow from './SlideShow.js'
-import TopSellerForm from './TopSellerForm.js';
+import SlideShow from '../subcomponent/SlideShow';
+import TopSellerForm from '../subcomponent/TopSellerForm';
 
-import MenuScreen from './Menu.js';
 
 class HomeScreen extends Component{
 
