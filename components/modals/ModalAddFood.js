@@ -17,8 +17,8 @@ export default class ModalAddFood extends Component{
             count : 1,
             totalPrice: '0',
         };
-        global.increaseProduct = this.increaseProduct.bind(this);
-        global.decreaseProduct = this.decreaseProduct.bind(this);
+        global.increase = this.increaseProduct.bind(this);
+        global.decrease = this.decreaseProduct.bind(this);
 
     }
 
@@ -43,15 +43,18 @@ export default class ModalAddFood extends Component{
         } else{
             this.setState({count : this.state.count - 1});  
         }
-        console.log('decrease');
+        // console.log('decrease');
     }
 
     increaseProduct(){
         this.setState({count : this.state.count + 1});
-        console.log('increase');
-
+        // console.log('increase');
     }
 
+    addProductToCart(item, quantity){
+        global.addProductToCart(item, quantity);
+        this.setState({modalVisible : false});
+    }
 
 
     render(){
@@ -74,6 +77,7 @@ export default class ModalAddFood extends Component{
                         {/* header content modal */}
                         <View style={header}>
                             <TouchableOpacity onPress={ () => {
+                                    // đóng modal
                                     this.setModalVisible(!this.state.modalVisible);} }>
                                 <View style={closeButton}>
                                     <Ionicons name='ios-close' size={32} color="white"/>
@@ -114,7 +118,9 @@ export default class ModalAddFood extends Component{
                         <View style={footer}>
                             <View>
                                 <TouchableOpacity onPress={ () => {
-                                    this.setModalVisible(!this.state.modalVisible);}}>
+                                    // thêm món
+                                    this.addProductToCart(this.state.item, this.state.count);
+                                    }}>
                                     <View style={addButton}>
                                         <Text style={text}>Thêm vào giỏ</Text>
                                     </View>

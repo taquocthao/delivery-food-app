@@ -16,14 +16,20 @@ export default class ChangeValueButton extends Component{
         }
     }
 
+    componentWillReceiveProps(nextProps){
+        this.setState({currentValue : nextProps.currentValue});
+    }
+
     decreaseProduct(productId){
         global.decreaseProduct(productId);
-        this.setState({currentValue : this.state.currentValue - 1});
+        // if(this.state.currentValue > 1){
+        //     this.setState({currentValue : this.state.currentValue - 1});
+        // }
     }
 
     increaseProduct(productId){
         global.increaseProduct(productId);
-        this.setState({currentValue : this.state.currentValue + 1});
+        // this.setState({currentValue : this.state.currentValue + 1});
 
     }
 

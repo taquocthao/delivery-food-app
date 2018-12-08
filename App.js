@@ -11,6 +11,7 @@ import SignInScreen from './components/authentication/Login';
 import RegistryScreen from './components/authentication/Registry';
 import ForgetPasswordScreen from './components/authentication/ForgetPassword';
 import MenuScreen from './components/mainform/Menu';
+// import OrderScreen from './components/subcomponent/OrderComponent';
 
 class AuthLoadingScreen extends Component{
     constructor(props){
@@ -47,8 +48,9 @@ const AuthStack = createStackNavigator({
 });
 
 const AppStack = createStackNavigator({
-    Home : HomeScreen,
-    Menu: MenuScreen,
+        Home : HomeScreen,
+        Menu: MenuScreen,
+        // Order : OrderScreen,
     },
     {
         headerMode: 'none',

@@ -58,7 +58,7 @@ export default class FoodList extends Component{
                         </TouchableOpacity>
                         
                         <View style={styles.rightDetails}>
-                            <TouchableOpacity onPress={() => this.addToCart({item})}>
+                            <TouchableOpacity onPress={() => this.addToCart({item}, 1)}>
                                 <View style={styles.buttonAdd}>
                                     <Ionicons name='ios-add' size={24}></Ionicons>
                                 </View>
@@ -72,9 +72,9 @@ export default class FoodList extends Component{
     }
 
     
-    addToCart({item}){
+    addToCart({item}, quantity){
         
-        global.addProductToCart(item);
+        global.addProductToCart(item, quantity);
 
     }
 
@@ -105,10 +105,6 @@ export default class FoodList extends Component{
                     renderItem={this.renderItem}
                     />
                  
-                {/* <View style={this.state.cartVisible == true ? styles.footer : styles.hide}>
-                    <FooterCart visible={this.state.cartVisible}/>
-                </View> */}
-                 
             </View>
             
         );
@@ -116,20 +112,9 @@ export default class FoodList extends Component{
 
 }
 
-const widthDevice = Dimensions.get('window').width;
+// const widthDevice = Dimensions.get('window').width;
 
 const styles = StyleSheet.create({
-
-    // footer:{
-    //     position: 'absolute',
-    //     bottom:0,
-    //     height: 50,
-    //     width: widthDevice,
-        
-    // },
-    // hide:{
-    //     display: "none",
-    // },
 
     box:{
         flex: 1,

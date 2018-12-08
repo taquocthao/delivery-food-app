@@ -14,11 +14,11 @@ export default class ShoppingCart extends Component{
         this.state = {
             modalVisible : false,
             isClearCart : false,
-        }
+        };
     }
 
     componentWillReceiveProps(nextProps){
-        if(nextProps.visible != false){
+        if(nextProps.visible !== false){
             this.setState({modalVisible : true});
         }
     }
@@ -29,7 +29,14 @@ export default class ShoppingCart extends Component{
 
     deleteCart(){
         global.deleteCart();
-        this.setState({isClearCart:true,})
+        this.setState({isClearCart:true, modalVisible: false});
+    }
+
+    gotoCart(){
+        this.setState({modalVisible: false}, function(){
+            global.gotoCart();
+
+        });
     }
 
     render(){
@@ -61,7 +68,7 @@ export default class ShoppingCart extends Component{
                         </View>
                         {/* footer */}
                         <View style={footer}>
-                            <TouchableOpacity>
+                            <TouchableOpacity onPress={()=>{this.gotoCart()}}>
                                 <View style={button}>
                                     <Text style={text}>Giao hàng</Text>
                                     <Ionicons name='ios-arrow-round-forward' size={24} color='#fff'/>

@@ -2,21 +2,28 @@ import React, {Component} from 'react';
 import {
     View, Text, Picker, StyleSheet, TextInput, Dimensions, Alert, TouchableOpacity,
 } from 'react-native';
+
+import {createStackNavigator} from 'react-navigation';
+
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 // import các component
 import FoodList from '../subcomponent/FoodList';
 import {URL_PRODUCT_CATEGORY} from '../Url';
 import FooterCart from '../subcomponent/FooterCart';
+import OrderScreen from '../subcomponent/OrderComponent';
+import global from '../global';
 
-export default class Menu extends Component{
+
+class Menu extends Component{
 
     constructor(props){
         super(props);
         this.state = {
             dataProductCategory: [],
             item : '',
-        }
+        };
+        global.gotoCart = this.gotoCart.bind(this);
     }
 
     // sau khi khởi tạo component, sẽ gọi đến hàm did mount.
@@ -38,6 +45,10 @@ export default class Menu extends Component{
         this.setState({
             item : itemValue,
         });
+    }
+
+    gotoCart(){
+        this.props.navigation.navigate('Order');        
     }
 
     render(){
@@ -82,6 +93,22 @@ export default class Menu extends Component{
         );
     }
 }
+
+const CreateStack = createStackNavigator(
+    {
+        Menu : Menu,
+        Order : OrderScreen,
+    },
+    {
+        headerMode: 'none',
+        navigationOptions:{
+            header : null,
+        },
+    }
+);
+
+export default CreateStack;
+
 const widthDemesion = Dimensions.get('window').width - 30;
 
 const styles = StyleSheet.create({

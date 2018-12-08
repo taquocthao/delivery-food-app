@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
 import {
-    View, Text, TouchableOpacity, StyleSheet, AsyncStorage, Alert,
+    View, Text, TouchableOpacity, StyleSheet, AsyncStorage,
 } from 'react-native';
+
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import global from '../global';
 // import các component
@@ -32,13 +33,14 @@ export default class FooterCart extends Component{
        retrieveProducts()
        .then(items => {
             if(items !== null){
-                // console.log("visible : true");
+                
                 this.setState({
                     cartArray : JSON.parse(items),
                     visible : true
                 });
             }
-       });
+       })
+       .then(() => this.ChangeTotalPrice());
     }
 
     componentWillReceiveProps(){
@@ -48,33 +50,36 @@ export default class FooterCart extends Component{
     }
 
     // lưu sản phẩm đã chọn vào data
-    addProductToCart(product){
+    addProductToCart(product, newQuantity){
         //kiểm tra sản phẩm tồn tại trong giỏ hàng
         const existsProduct = this.state.cartArray.findIndex(e => e.product.id == product.id);
-        console.log(existsProduct);
-        if(existsProduct === -1){
-            // console.log('Chua ton tai');
+        // console.log(existsProduct);
+        if(existsProduct === -1){ // nếu sản phẩm chưa được gọi trước đó
             this.setState({
-                cartArray : this.state.cartArray.concat({product: product, quantity: 1}),
+                cartArray : this.state.cartArray.concat({product: product, quantity: newQuantity}),
                 visible : true,
                 modalVisible: false,
             }, function(){
-                saveProducts(this.state.cartArray);
+                saveProducts(this.state.cartArray).then(()=>this.ChangeTotalPrice());
             });
-        }else{
-            // console.log("ton tai");
+        }else{ // nếu sản phẩm đã tồn tại trong giỏ hàng
+            // thay đổi số lượng đối với sản phẩm đó
             this.state.cartArray[existsProduct] = {
-                product: product, quantity : this.state.cartArray[existsProduct].quantity + 1};
+                product: product, quantity : this.state.cartArray[existsProduct].quantity + newQuantity};
+            // cập nhật lại mảng, ngăn modal giỏ hàng hiển thị thông qua state : modalVisible
+            // hiển thị số lượng sản phẩm trong giỏ hàng thông qua state : visible
             this.setState({
                 cartArray : this.state.cartArray,
                 modalVisible: false,
                 visible : true,
             }, function(){
-                saveProducts(this.state.cartArray);
+                // sau khi thay đổi mảng, gọi đến hàm saveProducts để lưu các sản phẩm xuống file local
+                saveProducts(this.state.cartArray).then(()=>this.ChangeTotalPrice());
             });
         }
     }
 
+    // tăng số lượng món ăn từ component giỏ hàng (ModalShopingCart)
     increaseProduct(productId){
         
         const newCart = this.state.cartArray.map(item => {
@@ -85,20 +90,30 @@ export default class FooterCart extends Component{
         this.setState({
             cartArray : newCart,
         }, function(){
-            saveProducts(this.state.cartArray);
+            saveProducts(this.state.cartArray).then(()=>this.ChangeTotalPrice());
         });
     }
 
+    // giảm số lượng món ăn từ component giỏ hàng (ModalShopingCart)
     decreaseProduct(productId){
         const newCart = this.state.cartArray.map(item => {
             if(item.product.id !== productId)
                 return item;
-            return {product: item.product, quantity : item.quantity - 1};
+            else {
+                if(item.quantity <= 1){
+                    console.log('< 1');
+                    return {product: item.product, quantity : 1};
+                } else {
+                    //  console.log(' > 1');
+                    return {product: item.product, quantity : item.quantity - 1};
+                 }
+            }
+            
         });
         this.setState({
             cartArray : newCart,
         }, function(){
-            saveProducts(this.state.cartArray);
+            saveProducts(this.state.cartArray).then(()=>this.ChangeTotalPrice());
         });
     }
     
@@ -108,6 +123,7 @@ export default class FooterCart extends Component{
                 visible : false,
                 count : 0,
                 cartArray : [], 
+                totalPrice : 0,
             })
         );
     }
@@ -123,8 +139,19 @@ export default class FooterCart extends Component{
         return false;
     }
 
+    ChangeTotalPrice() {
+        var total = 0;
+        this.state.cartArray.forEach(element => {
+            total += element.quantity*element.product.price;
+        });
+        this.setState({totalPrice : total});
+    }
+
     stepToOrder(){
-        
+        // this.props.navigation.navigate('Order');
+        if(this.state.cartArray.length > 0){
+            global.gotoCart();
+        }
     }
 
     showShoppingCart(){
@@ -159,7 +186,7 @@ export default class FooterCart extends Component{
                         </TouchableOpacity>
                     </View>
                 </View>
-                <ModalShoppingCart visible={this.state.modalVisible}/>
+                <ModalShoppingCart visible={this.state.modalVisible} />
             </View>
         );
     }

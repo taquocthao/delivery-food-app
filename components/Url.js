@@ -1,4 +1,4 @@
-const localhost = 'http://192.168.0.116:8080/DeliveryFoodServices/rest';
+const localhost = 'http://192.168.1.52:8080/DeliveryFoodServices/rest';
 
 const URL_LOGIN = localhost + '/UserService/users/login';
 const URL_REGISTRY = localhost + '/UserService/users/registry';

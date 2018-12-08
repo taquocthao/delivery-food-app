@@ -28,10 +28,8 @@ export default class ListProduct extends Component{
     }
 
     componentWillReceiveProps(nextProps){
-        if(nextProps.isClearCart){
-            retrieveProducts()
-                .then(items => this.setState({products : JSON.parse(items)}));
-        }
+        retrieveProducts()
+            .then(items => this.setState({products : JSON.parse(items)}));
     }
 
     renderItem = ({item}) => {
@@ -46,7 +44,10 @@ export default class ListProduct extends Component{
                 </View>
                 {/* right view */}
                 <View style={right}>
-                    <ChangeValueButton productId={item.product.id} currentValue={item.quantity} />
+                    <ChangeValueButton 
+                        productId={item.product.id} 
+                        currentValue={item.quantity} 
+                        />
                 </View>
             </View>
         );

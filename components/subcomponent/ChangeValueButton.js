@@ -17,16 +17,16 @@ export default class ChangeValueButton extends Component{
     }
 
     componentWillReceiveProps(nextProps){
-        
+        this.setState({currentValue : nextProps.currentValue});
     }
 
     decreaseProduct(){
-        global.decreaseProduct();
+        global.decrease();
         // console.log('here in change  value component '+ productId);
     }
 
     increaseProduct(){
-        global.increaseProduct();
+        global.increase();
         // console.log('here in change  value component '+ productId);
 
     }
