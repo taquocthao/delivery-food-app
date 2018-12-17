@@ -48,27 +48,28 @@ export default class Registry extends Component{
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                    id : 0,
+                    // id : 0,
                     name : userName,
                     email : userEmail,
                     password : userPassword,
-                    gender: true,
-                    birthday: '00-00-1990',
-                    phone : userPhone,
+                    gender: 1,
+                    dob: '00-00-1990',
+                    phonenumber : userPhone,
                     address : userAddress,
                     image: '',
                 })
             })
             .then((response) => response.json())
             .then((responseJson) => {
-                var userDetails = JSON.stringify(responseJson);
-                if(userDetails != null){
-                    AsyncStorage.setItem('userToken', userDetails);
-                    this.props.navigation.navigate("Home");
-                }
-                else {
-                    Alert.alert("Đăng ký thất bại");
-                }
+                // var userDetails = JSON.stringify(responseJson);
+                // if(userDetails != null){
+                //     AsyncStorage.setItem('userToken', userDetails);
+                //     this.props.navigation.navigate("Home");
+                // }
+                // else {
+                //     Alert.alert("Đăng ký thất bại");
+                // }
+                console.log(responseJson);
             })
             .catch((err) => console.error(err))
         }

@@ -40,7 +40,7 @@ export default class ListProduct extends Component{
                 {/* left view */}
                 <View style={left}>
                     <Text style={title}>{item.product.name}</Text>
-                    <Text style={price}>{item.product.price} x {item.quantity} = {item.product.price * item.quantity}</Text>
+                    <Text style={price}>{item.product.salePrice} x {item.quantity} = {item.product.salePrice * item.quantity}</Text>
                 </View>
                 {/* right view */}
                 <View style={right}>

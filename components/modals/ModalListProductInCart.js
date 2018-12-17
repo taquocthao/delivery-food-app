@@ -56,7 +56,7 @@ export default class ShoppingCart extends Component{
                 <View style={detailBackground}>
                     <Text style={{fontWeight: 'bold'}}>{item.product.name}</Text>
                     <Text >
-                        {item.product.price} x {item.quantity} = {item.product.price * item.quantity}
+                        {item.product.salePrice} x {item.quantity} = {item.product.salePrice * item.quantity}
                     </Text>
                 </View>
             </View>

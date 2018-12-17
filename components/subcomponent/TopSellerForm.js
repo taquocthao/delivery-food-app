@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {
-    View, Text, FlatList, StyleSheet, Image, Dimensions,
+    View, Text, FlatList, StyleSheet, Image, Dimensions, ActivityIndicator,
 } from 'react-native';
 
 import {URL_TOPSELLER} from '../Url';
@@ -10,17 +10,18 @@ export default class TopSeller extends Component{
         super(props);
         this.state = {
             dataSource: [],
+            isLoading: true,
         }
     }
 
     componentDidMount(){
-        // lấy danh sách 10 sản phẩm được đặt hàng nhiều nhất 
-        const url = URL_TOPSELLER;
-        fetch(url)
+        // lấy danh sách 15 sản phẩm được đặt hàng nhiều nhất 
+        fetch(URL_TOPSELLER)
             .then((response) => response.json())
             .then((responseJson) => {
                 this.setState({ 
                     dataSource: responseJson,
+                    isLoading: false,
                 })
             })
             .catch((error) => {console.error(error)})
@@ -44,6 +45,13 @@ export default class TopSeller extends Component{
     keyExtractor = (item, index) => item.id;
 
     render(){
+        if(this.state.isLoading){
+            return(
+                <View style={styles.container}>
+                    <ActivityIndicator />
+                </View>
+            );
+        }
         return (
             <FlatList
                 data={this.state.dataSource}
@@ -59,6 +67,11 @@ const numberColumns = 3;
 const size = Dimensions.get('window').width/numberColumns;
 
 const styles = StyleSheet.create({
+    container:{ // style cho ActivityIndicator
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
     containerBox: {
         width: size,
         height: size,

@@ -22,6 +22,9 @@ class Menu extends Component{
         this.state = {
             dataProductCategory: [],
             item : '',
+            textSearch : '',
+            // isLoadingCategory : true,
+            // isLoadingProduct : true,
         };
         global.gotoCart = this.gotoCart.bind(this);
     }
@@ -47,6 +50,13 @@ class Menu extends Component{
         });
     }
 
+    // hàm được gọi khi tiềm kiếm sản phẩm
+    onTextChangeInSearchBox(text){
+        console.log(text);
+    }
+
+
+    // chuyển đến component gọi món khi click vào nút "Giao hàng" trên component FooterCart
     gotoCart(){
         this.props.navigation.navigate('Order');        
     }
@@ -64,6 +74,8 @@ class Menu extends Component{
                         <TextInput 
                             style={styles.inputSearch}
                             placeholder="Tìm kiếm"
+                            onChangeText={(text)=>this.onTextChangeInSearchBox(text)}
+                
                         ></TextInput>
                     </View>
                     <View style={styles.pickerBox}>
@@ -87,6 +99,7 @@ class Menu extends Component{
                 </View>
                 {/* footer: hiển thị giỏ hàng và nút giao hàng */}
                 <View style={styles.footer}>
+                
                     <FooterCart />
                 </View>
             </View>

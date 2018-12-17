@@ -2,7 +2,7 @@
 import React, {Component} from 'react';
 import {
     View, TextInput, Text, StyleSheet, TouchableOpacity, 
-    Alert, AsyncStorage, ScrollView,
+    Alert, AsyncStorage, ScrollView, ActivityIndicator
 } from 'react-native';
 import { 
     Divider
@@ -24,16 +24,17 @@ export default class Login extends Component{
             email: '',
             password: '',
             userDetails: '',
+            isLoading : false,
         }
     }
     // kiểm tra đăng nhập
     checkLogin(em, pwd){
-        const url = URL_LOGIN;
-        if(em === '' || pwd === ''){
+        if(em === '' || pwd === '' || em === null || pwd === null){
             Alert.alert("Invalid input","Email hoặc mật khẩu không được để trống");
         }else {
+            this.setState({isLoading : true});
             // gọi service kiểm tra đăng nhập
-            fetch(url,
+            fetch(URL_LOGIN,
                 {
                     method: 'POST',
                     headers: {
@@ -47,20 +48,19 @@ export default class Login extends Component{
                 }
             )
             .then((response) => response.json())
-            .then((responseJson) => {
-                // tra ve thong tin user
-                this.setState({
-                    userDetails : JSON.stringify(responseJson),
-                }, function(){
-                    // kiêm tra kết quả trả về, nếu kết quả trả về user rỗng  -> không thành công
-                    if(responseJson.id ===  0){
-                        Alert.alert("Đăng nhập thất bại","Email hoặc mật khẩu không đúng");
-                    } else{
+            .then(responseJson => {
+                if(responseJson !== null){
+                    this.setState({ userDetails : JSON.stringify(responseJson),}, function(){
                         // luư thông tin user và đi đến trang chủ
-                        this._saveUserDetails();
-                    }
-                    
-                })
+                        this._saveUserDetails()
+                        .then( () => this.setState({isLoading: false}))
+                        .then(() => this.props.navigation.navigate("Home"))
+                    });
+                } else {
+                    // console.log("failure")
+                    this.setState({isLoading: false});
+                    Alert.alert("Đăng nhập thất bại","Email hoặc mật khẩu không đúng");
+                }
             })
             .catch((error) => console.error(error))
         }
@@ -68,9 +68,7 @@ export default class Login extends Component{
     }
 
     _saveUserDetails = async () => {
-        
         await AsyncStorage.setItem("userToken", this.state.userDetails);
-        this.props.navigation.navigate("Home");
     }
 
     openModalRegistry(){
@@ -79,6 +77,13 @@ export default class Login extends Component{
     
    
     render(){
+        if(this.state.isLoading){
+            return (
+                <View style={{flex:1, alignItems: "center", justifyContent: 'center'}}>
+                    <ActivityIndicator />
+                </View>
+            );
+        }
         return (
             <View style={styles.body}>
                 <View style={styles.container}>

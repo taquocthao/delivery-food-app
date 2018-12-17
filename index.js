@@ -3,6 +3,7 @@
 import {AppRegistry} from 'react-native';
 import App from './App';
 import {name as appName} from './app.json';
-import OrderScreen from './components/subcomponent/OrderComponent';
+import OrderHistory from './components/mainform/OrderHistoryScreen';
+// import CheckInternet from  './components/CheckConnectInternet';
 
-AppRegistry.registerComponent(appName, () => App);
+AppRegistry.registerComponent(appName, () => OrderHistory);

@@ -128,7 +128,7 @@ export default class ModalAddFood extends Component{
                                 </TouchableOpacity>
                             </View>
                             <View>
-                                <Text style={text}>{this.state.item.price*this.state.count}</Text>
+                                <Text style={text}>{this.state.item.salePrice*this.state.count}</Text>
                             </View>
                             
                         </View>

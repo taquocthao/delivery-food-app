@@ -21,7 +21,7 @@ export default class FooterCart extends Component{
             visible : false,
             cartArray: [],
             // retrieveArray: '',
-            modalVisible: false,
+            modalShoppingCartVisible: false,
         }
         global.addProductToCart = this.addProductToCart.bind(this);
         global.decreaseProduct = this.decreaseProduct.bind(this);
@@ -45,7 +45,7 @@ export default class FooterCart extends Component{
 
     componentWillReceiveProps(){
         this.setState({
-            modalVisible: false,
+            modalShoppingCartVisible: false,
         });
     }
 
@@ -58,7 +58,7 @@ export default class FooterCart extends Component{
             this.setState({
                 cartArray : this.state.cartArray.concat({product: product, quantity: newQuantity}),
                 visible : true,
-                modalVisible: false,
+                modalShoppingCartVisible: false,
             }, function(){
                 saveProducts(this.state.cartArray).then(()=>this.ChangeTotalPrice());
             });
@@ -66,11 +66,11 @@ export default class FooterCart extends Component{
             // thay đổi số lượng đối với sản phẩm đó
             this.state.cartArray[existsProduct] = {
                 product: product, quantity : this.state.cartArray[existsProduct].quantity + newQuantity};
-            // cập nhật lại mảng, ngăn modal giỏ hàng hiển thị thông qua state : modalVisible
+            // cập nhật lại mảng, ngăn modal giỏ hàng hiển thị thông qua state : modalShoppingCartVisible
             // hiển thị số lượng sản phẩm trong giỏ hàng thông qua state : visible
             this.setState({
                 cartArray : this.state.cartArray,
-                modalVisible: false,
+                modalShoppingCartVisible: false,
                 visible : true,
             }, function(){
                 // sau khi thay đổi mảng, gọi đến hàm saveProducts để lưu các sản phẩm xuống file local
@@ -142,7 +142,7 @@ export default class FooterCart extends Component{
     ChangeTotalPrice() {
         var total = 0;
         this.state.cartArray.forEach(element => {
-            total += element.quantity*element.product.price;
+            total += element.quantity*element.product.salePrice;
         });
         this.setState({totalPrice : total});
     }
@@ -156,7 +156,7 @@ export default class FooterCart extends Component{
 
     showShoppingCart(){
         // Alert.alert("test");
-        this.setState({modalVisible: true});
+        this.setState({modalShoppingCartVisible: true});
     }
 
     render(){
@@ -186,7 +186,7 @@ export default class FooterCart extends Component{
                         </TouchableOpacity>
                     </View>
                 </View>
-                <ModalShoppingCart visible={this.state.modalVisible} />
+                <ModalShoppingCart visible={this.state.modalShoppingCartVisible} />
             </View>
         );
     }

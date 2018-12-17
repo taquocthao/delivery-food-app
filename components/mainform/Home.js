@@ -19,6 +19,7 @@ import TopSellerForm from '../subcomponent/TopSellerForm';
 
 class HomeScreen extends Component{
 
+    
 
     ShowMoreMenu(){
         this.props.navigation.navigate('Menu');
@@ -67,6 +68,7 @@ class HomeScreen extends Component{
         );
     }
 }
+
 
 export default createBottomTabNavigator(
     {

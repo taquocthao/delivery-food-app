@@ -1,10 +1,12 @@
 import React, {Component} from 'react';
 import {
     FlatList, Image, Text, TouchableOpacity, 
-    StyleSheet, View, Dimensions,
+    StyleSheet, View, Dimensions, ActivityIndicator,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {URL_PRODUCTS} from '../Url';
+import {URL_PRODUCTS_BY_CATEGORY} from '../Url';
+
 
 // import các component
 import ModalAddFood from '../modals/ModalAddFood';
@@ -20,19 +22,24 @@ export default class FoodList extends Component{
             product: {},
             categoryId : props.categoryId,
             modalVisible : false,
+            isLoadingProduct : true,
+
         }
     }
 
     componentWillReceiveProps(nextProps){
         this.setState({ 
             modalVisible : false,
+            isLoadingProduct : true,
         });
-        const url = URL_PRODUCTS + nextProps.categoryId;
+        // const url = URL_PRODUCTS + nextProps.categoryId;
+        const url = nextProps.categoryId === '' ? URL_PRODUCTS : URL_PRODUCTS_BY_CATEGORY + nextProps.categoryId;
         fetch(url)
         .then((response) => response.json())
         .then((responseJson) => {
             this.setState({
                 products : responseJson,
+                isLoadingProduct: false,
             });
         })
         .catch((err) => {console.error(err)})
@@ -49,7 +56,7 @@ export default class FoodList extends Component{
                         <TouchableOpacity onPress={() => {this.pressItem({item})}}>
                             <View style={styles.leftDetails}>
                                 <Text >{item.name}</Text>
-                                <Text style={styles.textPrice}>{item.price}</Text>
+                                <Text style={styles.textPrice}>{item.salePrice}</Text>
                                 <View style={styles.iconCart}>
                                     <Ionicons name='ios-cart' size={12}/>
                                     <Text style={styles.text}>{item.timesBooked}</Text>
@@ -89,6 +96,13 @@ export default class FoodList extends Component{
     keyExtractor = (item, index) => item.id.toString();
 
     render(){
+        if(this.state.isLoadingProduct){
+            return (
+                <View style={styles.container}>
+                    <ActivityIndicator />
+                </View>
+            );
+        }
         return (
             <View>
                 {/* modal add food, hidden default */}
@@ -115,6 +129,12 @@ export default class FoodList extends Component{
 // const widthDevice = Dimensions.get('window').width;
 
 const styles = StyleSheet.create({
+
+    container :{ // style cho ActivityIndicator
+        flex: 1,
+        alignItems : 'center',
+        justifyContent: 'center',
+    },
 
     box:{
         flex: 1,

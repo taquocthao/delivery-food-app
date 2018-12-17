@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {
-    AsyncStorage, View, ActivityIndicator, StyleSheet,
+    AsyncStorage, View, ActivityIndicator, StyleSheet, NetInfo, Alert,
 } from 'react-native';
 import {
     createSwitchNavigator, createStackNavigator,
@@ -11,12 +11,26 @@ import SignInScreen from './components/authentication/Login';
 import RegistryScreen from './components/authentication/Registry';
 import ForgetPasswordScreen from './components/authentication/ForgetPassword';
 import MenuScreen from './components/mainform/Menu';
-// import OrderScreen from './components/subcomponent/OrderComponent';
+// import LoadingMenuScreen from './components/loading_component/LoadingMenu';
 
 class AuthLoadingScreen extends Component{
     constructor(props){
         super(props);
-        this._bootstrapAsync();
+        // this._bootstrapAsync();
+    }
+
+    componentWillMount(){
+        NetInfo.getConnectionInfo().then((connectionInfo) => {
+            // console.log('Initial, type: ' + connectionInfo.type + ', effectiveType: ' + connectionInfo.effectiveType);
+            if(connectionInfo.type == 'none' || connectionInfo.type == 'unknown'){
+                console.log("disconnected");
+                
+            } else {
+                // this.props.navigation.navigate("App");
+                console.log("connected");
+                this._bootstrapAsync();
+            }
+          });
     }
 
     _bootstrapAsync = async () => {
@@ -50,7 +64,7 @@ const AuthStack = createStackNavigator({
 const AppStack = createStackNavigator({
         Home : HomeScreen,
         Menu: MenuScreen,
-        // Order : OrderScreen,
+        // LoadingMenu : LoadingMenuScreen,
     },
     {
         headerMode: 'none',

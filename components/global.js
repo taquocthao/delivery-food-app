@@ -6,4 +6,5 @@ module.exports = {
     decrease: null,
     deleteCart : null,
     gotoCart : null,
+    sendAddress : null,
 }

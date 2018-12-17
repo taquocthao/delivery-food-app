@@ -45,9 +45,9 @@ export default class Profile extends Component{
                     userEmail : myObject.email,
                     userPassword : myObject.password,
                     userImage: myObject.image,
-                    userGender: myObject.gender === false ? 'Nữ' : 'Nam',
-                    userBirthday: myObject.birthday,
-                    userPhone : myObject.phone,
+                    userGender: myObject.gender === 1 ? 'Nữ' : 'Nam',
+                    userBirthday: myObject.dob,
+                    userPhone : myObject.phonenumber,
                     userAddress: myObject.address,
                 })
             }
@@ -58,7 +58,7 @@ export default class Profile extends Component{
     }
 
     updateUser(){
-        var url = URL_UPDATE_USER;
+        var url =  URL_UPDATE_USER;
         fetch(url, {
             method: 'PUT',
             headers:{
@@ -70,9 +70,9 @@ export default class Profile extends Component{
                 name : this.state.userName,
                 email : this.state.userEmail,
                 password : this.state.userPassword,
-                gender : this.state.userGender === 'Nam' ? true : false,
-                birthday : this.state.userBirthday,
-                phone : this.state.userPhone,
+                gender : this.state.userGender === 'Nam' ? 2 : 1,
+                dob : this.state.userBirthday,
+                phonenumber : this.state.userPhone,
                 address : this.state.userAddress,
                 image : this.state.userImage,
             }),

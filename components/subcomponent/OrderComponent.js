@@ -1,14 +1,16 @@
 import React, {Component} from 'react';
 import {
-    View, Text, StyleSheet, AsyncStorage, TouchableOpacity, FlatList,
+    View, Text, StyleSheet, AsyncStorage, TouchableOpacity, Alert,
 } from 'react-native';
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 // import component
 import ModalListProductInCart from '../modals/ModalListProductInCart';
-
-// import CartList from './CartList';
+import MapView from '../map_components/mapview';
+import global from '../global';
+// import url goi món
+import {URL_ORDER} from '../Url'
 
 export default class Order extends Component{
 
@@ -22,6 +24,7 @@ export default class Order extends Component{
             freeShipping: 0,
             totalPrice : 0,
             visibleShopCart : false,
+            address : 'null',
         };
     }
 
@@ -33,12 +36,10 @@ export default class Order extends Component{
         .then(items => this.setState({cartArray : items}))
         .then(() => this.getPrice())
         .then(() => this.calculatePrice());
-
     }
 
     componentWillReceiveProps(nextProps){
         this.setState({visibleShopCart : false});
-        // console.log('hide modal');
     }
 
     async getUserInfor(){
@@ -72,7 +73,7 @@ export default class Order extends Component{
     getPrice(){
         var total = 0;
         this.state.cartArray.forEach(element => {
-            total += element.quantity*element.product.price;
+            total += element.quantity*element.product.salePrice;
         });
         this.setState({price : total})
     }
@@ -87,6 +88,41 @@ export default class Order extends Component{
         this.setState({visibleShopCart: true});
     }
 
+    // nhận địa chỉ từ mapview gửi qua cho state address
+    getAddress = (addr) => {
+        this.setState({address : addr});
+    }
+
+    // gọi món lên hệ thống
+    orderToServer(){
+        var invoice_details = JSON.stringify({
+            p : this.state.cartArray.map(e => {return ({id : e.product.id, quantity : e.quantity})}),
+            id_user : this.state.userInfor.id,
+            address : this.state.address
+        });
+        fetch(URL_ORDER, 
+            {
+                method: 'POST',
+                headers: {
+                    'Accept' : 'application/json',
+                    'Content-Type' : 'application/json',
+                },
+                body: invoice_details
+            }
+        ).then((response) => response.json())
+        .then(resposeJson => {
+            // console.log(resposeJson.id);
+            if(resposeJson.id <= 0){ //failure
+                Alert.alert("Gọi món thất bại");
+            }else{ //gọi món thành công
+                // xóa cart
+                global.deleteCart();
+                // trở về menu
+                this.props.navigation.goBack();
+            }
+        })
+        .catch(err => console.log(err));
+    }
 
     render(){
         const {
@@ -105,15 +141,15 @@ export default class Order extends Component{
                     <View style={headerTop}>
                         {/* header left */}
                         <View style={headerLeft}>
-
+                            <MapView address={this.getAddress}/>
                         </View>
                         {/* header right */}
                         <View style={headerRight}>
                             <Text style={{color: 'gray', fontSize: 14}}>Giao đến</Text>
                             <Text style={{fontWeight: 'bold'}}>
-                                {userInfor.name} - {userInfor.phone}
+                                {userInfor.name} - {userInfor.phonenumber}
                             </Text>
-                            <Text>{userInfor.address}</Text>
+                            <Text>{this.state.address}</Text>
                         </View>
                     </View>
                     {/* header bottom */}
@@ -138,7 +174,7 @@ export default class Order extends Component{
                                         {/* tên sản phẩm, giá tiền */}
                                         <View style={rowProductRight}>
                                             <Text>{element.product.name}</Text>
-                                            <Text>{element.product.price * element.quantity}đ</Text>
+                                            <Text>{element.product.salePrice * element.quantity}đ</Text>
                                         </View>
                                     </View>
                                 );
@@ -203,7 +239,7 @@ export default class Order extends Component{
                             <Text style={{color: '#fff'}}>{cartArray.length} Phần</Text>
                         </View>
                         <View style={footerBox}>
-                            <TouchableOpacity>
+                            <TouchableOpacity onPress={() => this.orderToServer()}>
                                 <View style={buttonOrder}>
                                     <Text style={{color: '#fff'}}>Đặt hàng </Text> 
                                     <Ionicons name="ios-arrow-round-forward" size={24} color='#fff'/>
