@@ -15,75 +15,28 @@ export default class HistoryInvoice extends Component{
             userInfor : {},
             isLoading : true,
             idInvoice : 0,
+            totalPrice : 0,
+            visibleModalViewDetails : false,
+            isInvoiceEmpty : false,
         }
     }
 
     componentDidMount(){
-        // this.getUserInfor().then((user) => {
-        //     this.setState({userInfor : user});
-        // })
-        // .then(()=>{
-        //     const urlGetInvoices = URL_ORDER_HISTORY + 5;
-        //     this.fetchInvoiceHistory(urlGetInvoices);
-        // })
-        // .then(()=> this.setState({isLoading: false}));
-        var myJson = JSON.stringify([
-            {
-                "status":"Ordered", 
-                "id_invoice":1,
-                "invoice_date":2018,
-                "Adress":"Go Vap", 
-                "id_employee":1,
-                "id_user":null, 
-                "total" :74,
-                "detailProducts":[
-                    {
-                        "id_product":7,
-                        "quantity":4
-                    }
-                ]
-            },
-            {
-                "status":"Ordered", 
-                "id_invoice":2,
-                "invoice_date":2018,
-                "Adress":"Quan 4", 
-                "id_employee":1,
-                "id_user":null, 
-                "total" :74,
-                "detailProducts":[
-                    {
-                        "id_product":7,
-                        "quantity":4
-                    },
-                    {
-                        "id_product":7,
-                        "quantity":4
-                    }
-                ]
-            },
-            {
-                "status":"Ordered", 
-                "id_invoice":2,
-                "invoice_date":2018,
-                "Adress":"Quan 4", 
-                "id_employee":1,
-                "id_user":null, 
-                "total" :74,
-                "detailProducts":[
-                    {
-                        "id_product":7,
-                        "quantity":4
-                    },
-                    {
-                        "id_product":7,
-                        "quantity":4
-                    }
-                ]
-            },
-        ]);
-        this.setState({invoices : JSON.parse(myJson), isLoading: false});
-        // console.log(myJson);
+        this.getUserInfor().then((user) => {
+            this.setState({userInfor : user});
+        })
+        .then(()=>{
+            if(this.state.userInfor !== null){
+                const urlGetInvoices = URL_ORDER_HISTORY + this.state.userInfor.id;
+                this.fetchInvoiceHistory(urlGetInvoices);
+                // console.log("user khac null");
+                // console.log("url  " + urlGetInvoices);
+            } else {
+                // console.log("user null");
+            }
+        })
+        .then(()=> this.setState({isLoading: false}));
+        
     }
 
     async getUserInfor(){
@@ -104,17 +57,24 @@ export default class HistoryInvoice extends Component{
         fetch(url)
         .then((res) => res.json())
         .then((resJson) => {
-            // if(resJson !== null){ // trả về đúng dạng 
-                console.log(JSON.stringify(resJson.invoices));
-            // } else { // khac dang
-            //     Alert.alert("lỗi kết nối", "Vui lòng thử lại");
-            // }
-            this.setState({invoices : resJson.invoices});
+            if(resJson != null){ // trả về đúng dạng 
+                console.log("json duoc fetch ve: " + JSON.stringify(resJson));
+                this.setState({invoices : resJson.invoices}, function(){
+                    // this.setState(totalPrice : resJson.)
+                });
+            
+            } else { // null
+                this.setState({isInvoiceEmpty : true});
+            } 
         })
     }
 
-    goToDetail(idInvoice){
-        this.setState({idInvoice : idInvoice});
+    goToDetail(id, totalPrice){
+        this.setState({
+            idInvoice : id, 
+            totalPrice : totalPrice,
+            visibleModalViewDetails : true,
+        });
     }
 
     keyExtractor = (item, index) => item.id_invoice.toString();
@@ -129,13 +89,12 @@ export default class HistoryInvoice extends Component{
                 </View>
                 {/* right box */}
                 <View style={styles.rightCard}>
-                    <TouchableOpacity onPress={() => this.goToDetail(item.id_invoice)}>
+                    <TouchableOpacity onPress={() => {this.goToDetail(item.id_invoice, item.total)}}>
                         <View style={styles.buttonViewDetails}>
                             <Text style={{color: "blue", marginRight: 5,}}>{item.detailProducts.length} phần</Text>
                             <Ionicons name="ios-arrow-forward" size={12} color="blue"/>
                         </View>
                     </TouchableOpacity>
-                    
                 </View>
             </View>
         );
@@ -143,7 +102,6 @@ export default class HistoryInvoice extends Component{
 
     render(){
         const {container, header, body,} = styles;
-
         if(this.state.isLoading){
             return(
                 <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
@@ -162,11 +120,15 @@ export default class HistoryInvoice extends Component{
                 <View style={body}>
                     <FlatList 
                         data={this.state.invoices}
+                        extraData={this.state}
                         renderItem={this.renderItem}
                         keyExtractor={this.keyExtractor}
                     />
                 </View>
-                <ModalViewHistoryOrdered idInvoice={this.state.idInvoice}/>
+                <ModalViewHistoryOrdered 
+                    visible={this.state.visibleModalViewDetails} 
+                    idInvoice={this.state.idInvoice}
+                    totalPrice={this.state.totalPrice}/>
             </View>
         );
     }
@@ -207,3 +169,61 @@ const styles = StyleSheet.create({
     }
 
 });
+
+// var myJson = JSON.stringify([
+        //     {
+        //         "status":"Ordered", 
+        //         "id_invoice":1,
+        //         "invoice_date":2018,
+        //         "Adress":"Go Vap", 
+        //         "id_employee":1,
+        //         "id_user":null, 
+        //         "total" :74,
+        //         "detailProducts":[
+        //             {
+        //                 "id_product":7,
+        //                 "quantity":4
+        //             }
+        //         ]
+        //     },
+        //     {
+        //         "status":"Ordered", 
+        //         "id_invoice":2,
+        //         "invoice_date":2018,
+        //         "Adress":"Quan 4", 
+        //         "id_employee":1,
+        //         "id_user":null, 
+        //         "total" :74,
+        //         "detailProducts":[
+        //             {
+        //                 "id_product":7,
+        //                 "quantity":4
+        //             },
+        //             {
+        //                 "id_product":7,
+        //                 "quantity":4
+        //             }
+        //         ]
+        //     },
+        //     {
+        //         "status":"Ordered", 
+        //         "id_invoice":2,
+        //         "invoice_date":2018,
+        //         "Adress":"Quan 4", 
+        //         "id_employee":1,
+        //         "id_user":null, 
+        //         "total" :74,
+        //         "detailProducts":[
+        //             {
+        //                 "id_product":7,
+        //                 "quantity":4
+        //             },
+        //             {
+        //                 "id_product":7,
+        //                 "quantity":4
+        //             }
+        //         ]
+        //     },
+        // ]);
+        // this.setState({invoices : JSON.parse(myJson), isLoading: false});
+        // console.log(myJson);

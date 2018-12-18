@@ -17,7 +17,7 @@ const URL_PRODUCTS_BY_CATEGORY = localhost + '/Product/GetProductListsWithCatego
 const URL_PRODUCT_CATEGORY = localhost + '/Product_Category/GetProduct_CategoryLists';
 const URL_ORDER = localhost +'/Product/ORDER';
 const URL_ORDER_HISTORY = localhost + '/Invoice_Detail/GetAllInvoice_DetailOneUser/?id_user=';
-const URL_PRODUCTS_BY_INVOICE_ID = localhost + '/';
+const URL_PRODUCTS_BY_INVOICE_ID = localhost + '/Invoice_Detail/GetAllInvoice_DetailOfInvoiceWithProduct/';
 
 export {URL_TOPSELLER};
 export {URL_LOGIN};
