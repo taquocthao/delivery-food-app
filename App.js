@@ -13,6 +13,9 @@ import ForgetPasswordScreen from './components/authentication/ForgetPassword';
 import MenuScreen from './components/mainform/Menu';
 // import LoadingMenuScreen from './components/loading_component/LoadingMenu';
 
+
+
+
 class AuthLoadingScreen extends Component{
     constructor(props){
         super(props);

@@ -4,7 +4,7 @@
 // const URL_TOPSELLER = localhost + '/ProductService/products/bestseller';
 // const URL_PRODUCT_CATEGORY = localhost + '/ProductService/products/category';
 
-const localhost = 'http://bigpile.somee.com';
+const localhost = 'http://ldvmservices.somee.com';
 // const localhost = 'http://localhost:4186';
 
 const URL_LOGIN = localhost + '/Store_User/UserLogin';

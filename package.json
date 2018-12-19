@@ -7,12 +7,12 @@
     "test": "jest"
   },
   "dependencies": {
-    "eslint": "^5.7.0",
-    "firebase": "^5.5.7",
+    "firebase": "^5.0.3",
     "google-map-react": "^1.0.9",
     "react": "16.6.0-alpha.8af6728",
     "react-native": "^0.57.8",
     "react-native-elements": "^0.19.1",
+    "react-native-firebase": "^5.1.1",
     "react-native-geocoder": "^0.5.0",
     "react-native-maps": "^0.22.1",
     "react-native-material-ui": "^1.30.1",
@@ -22,6 +22,8 @@
   },
   "devDependencies": {
     "babel-jest": "23.6.0",
+    "eslint": "^5.10.0",
+    "eslint-config-google": "^0.11.0",
     "jest": "23.6.0",
     "metro-react-native-babel-preset": "0.48.1",
     "react-test-renderer": "16.6.0-alpha.8af6728"

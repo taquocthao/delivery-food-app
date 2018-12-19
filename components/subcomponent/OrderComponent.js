@@ -12,10 +12,15 @@ import global from '../global';
 // import url goi món
 import {URL_ORDER} from '../Url'
 
+// import firebase from 'react-native-firebase';
+// import {firebaseApp} from '../firebaseConfig';
+
 export default class Order extends Component{
 
     constructor(props){
         super(props);
+        // this.itemRef = firebaseApp.database();
+
         this.state = {
             userInfor : {},
             cartArray: [],
@@ -95,11 +100,19 @@ export default class Order extends Component{
 
     // gọi món lên hệ thống
     orderToServer(){
-        var invoice_details = JSON.stringify({
+        var invoice_details = {
             p : this.state.cartArray.map(e => {return ({id : e.product.id, quantity : e.quantity})}),
             id_user : this.state.userInfor.id,
             address : this.state.address
-        });
+        };
+
+        // this.itemRef.ref("Invoices").push(invoice_details);
+
+        //xóa cart
+        // global.deleteCart();
+        // // trở về menu
+        // this.props.navigation.goBack();
+
         fetch(URL_ORDER, 
             {
                 method: 'POST',
@@ -107,6 +120,7 @@ export default class Order extends Component{
                     'Accept' : 'application/json',
                     'Content-Type' : 'application/json',
                 },
+                
                 body: invoice_details
             }
         ).then((response) => response.json())
