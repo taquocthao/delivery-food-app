@@ -34,13 +34,13 @@ class HomeScreen extends Component{
                     {/* Header */}
                     <View style={styles.header}>
                         {/* search bar */}
-                        <View style={styles.search}>
+                        {/* <View style={styles.search}>
                             <Ionicons  name='ios-search' size={32}/>
                             <TextInput 
                                 style={styles.inputSearch}
                                 placeholder="Tìm kiếm"
                             ></TextInput>
-                        </View>
+                        </View> */}
                         {/* slideshow */}
                         <View style={styles.carousel}>
                             <SlideShow />
@@ -118,24 +118,24 @@ const styles = StyleSheet.create({
         // borderWidth: 1,
         // borderColor: 'red',
     },
-    search:{
-        flexDirection: 'row',
-        borderColor: 'grey',
-        borderWidth: 1,
-        borderRadius: 7,
-        alignItems: 'center',
-        margin: 8,
-        paddingLeft: 15,
-        zIndex: 1,
-        position: "absolute",
-        backgroundColor: '#fff',
-        opacity: 0.8,
-    }
-    ,
-    inputSearch:{
-        flex: 1,
-        marginLeft: 5,
-    },
+    // search:{
+    //     flexDirection: 'row',
+    //     borderColor: 'grey',
+    //     borderWidth: 1,
+    //     borderRadius: 7,
+    //     alignItems: 'center',
+    //     margin: 8,
+    //     paddingLeft: 15,
+    //     zIndex: 1,
+    //     position: "absolute",
+    //     backgroundColor: '#fff',
+    //     opacity: 0.8,
+    // }
+    // ,
+    // inputSearch:{
+    //     flex: 1,
+    //     marginLeft: 5,
+    // },
     carousel: {
         backgroundColor: 'red',
         flex: 1,

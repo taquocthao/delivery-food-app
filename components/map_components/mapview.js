@@ -11,8 +11,8 @@ export default class Map extends Component{
   constructor(props){
     super(props);
     this.state = {
-      latitude : 0,
-      longitude: 0,
+      latitude : 10.77134121,
+      longitude: 106.69332355,
       address: '',
     }
   }

@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {
-    View, ActivityIndicator, StyleSheet, NetInfo, Text,
+    View, NetInfo, Text,
 } from 'react-native';
 
 export default class CheckConnect extends Component{

@@ -23,8 +23,7 @@ class Menu extends Component{
             dataProductCategory: [],
             item : '',
             textSearch : '',
-            // isLoadingCategory : true,
-            // isLoadingProduct : true,
+            isSearch : false,
         };
         global.gotoCart = this.gotoCart.bind(this);
     }
@@ -47,18 +46,20 @@ class Menu extends Component{
     onValueChangePicker(itemValue, itemIndex){
         this.setState({
             item : itemValue,
+            isSearch : false,
         });
     }
-
-    // hàm được gọi khi tiềm kiếm sản phẩm
-    onTextChangeInSearchBox(text){
-        console.log(text);
-    }
-
 
     // chuyển đến component gọi món khi click vào nút "Giao hàng" trên component FooterCart
     gotoCart(){
         this.props.navigation.navigate('Order');        
+    }
+
+    onChangeTextInSearchBox(text){
+        this.setState({
+            isSearch: true,
+            textSearch : text,
+        })
     }
 
     render(){
@@ -73,9 +74,9 @@ class Menu extends Component{
                         <Ionicons  name='ios-search' size={32}/>
                         <TextInput 
                             style={styles.inputSearch}
-                            placeholder="Tìm kiếm"
-                            onChangeText={(text)=>this.onTextChangeInSearchBox(text)}
-                
+                            placeholder="Tìm kiếm theo loại"
+                            onChangeText={(text)=> this.onChangeTextInSearchBox(text)}
+                            
                         ></TextInput>
                     </View>
                     <View style={styles.pickerBox}>
@@ -95,11 +96,13 @@ class Menu extends Component{
                     mặc định sẽ hiển thị "Tất cả"
                 */}
                 <View style={styles.body}>
-                    <FoodList categoryId={this.state.item === "" ? '' : this.state.item}/>
+                    <FoodList 
+                        categoryId={this.state.item === "" ? '' : this.state.item}
+                        searchText={this.state.textSearch}
+                        isSearch={this.state.isSearch}/>
                 </View>
                 {/* footer: hiển thị giỏ hàng và nút giao hàng */}
                 <View style={styles.footer}>
-                
                     <FooterCart />
                 </View>
             </View>

@@ -23,7 +23,10 @@ export default class FoodList extends Component{
             categoryId : props.categoryId,
             modalVisible : false,
             isLoadingProduct : true,
-
+            //
+            textSearch : props.searchText,
+            isSearch : props.isSearch,
+            productsBackup: '',
         }
     }
 
@@ -32,17 +35,23 @@ export default class FoodList extends Component{
             modalVisible : false,
             isLoadingProduct : true,
         });
-        // const url = URL_PRODUCTS + nextProps.categoryId;
-        const url = nextProps.categoryId === '' ? URL_PRODUCTS : URL_PRODUCTS_BY_CATEGORY + nextProps.categoryId;
-        fetch(url)
-        .then((response) => response.json())
-        .then((responseJson) => {
-            this.setState({
-                products : responseJson,
-                isLoadingProduct: false,
-            });
-        })
-        .catch((err) => {console.error(err)})
+        if(nextProps.isSearch){
+            // console.log("search " + nextProps.searchText);
+            var text = nextProps.searchText.toLowerCase();
+            this.searchProduct(text);
+        } else {
+            const url = nextProps.categoryId === '' ? URL_PRODUCTS : URL_PRODUCTS_BY_CATEGORY + nextProps.categoryId;
+            fetch(url)
+            .then((response) => response.json())
+            .then((responseJson) => {
+                this.setState({
+                    products : responseJson,
+                    productsBackup : responseJson,
+                    isLoadingProduct: false,
+                });
+            })
+            .catch((err) => {console.error(err)})
+        }
     }
 
     renderItem = ({item}) => {
@@ -78,22 +87,30 @@ export default class FoodList extends Component{
         );
     }
 
-    
-    addToCart({item}, quantity){
-        
-        global.addProductToCart(item, quantity);
+    keyExtractor = (item, index) => item.id.toString();
 
+    addToCart({item}, quantity){
+        global.addProductToCart(item, quantity);
     }
 
     pressItem({item}){
-
         this.setState({
             product : item,
             modalVisible : true,
         });
     }
 
-    keyExtractor = (item, index) => item.id.toString();
+    searchProduct(textSearch){
+       const newProducts = this.state.productsBackup.filter( e => {
+            return e.name.toLowerCase().match( textSearch ); 
+        });
+        // console.log(JSON.stringify(newProducts));
+        this.setState({
+            isLoadingProduct: false,
+            products : newProducts,
+        });
+    }
+
 
     render(){
         if(this.state.isLoadingProduct){

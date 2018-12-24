@@ -5,8 +5,8 @@
 // const URL_PRODUCT_CATEGORY = localhost + '/ProductService/products/category';
 
 const localhost = 'http://ldvmservices.somee.com';
-// const localhost = 'http://localhost:4186';
 
+// const localhost = 'http://localhost:4186';
 const URL_LOGIN = localhost + '/Store_User/UserLogin';
 const URL_REGISTRY = localhost + '/Store_User/AddUserNotParaments'
 const URL_UPDATE_USER = localhost + '/Store_User/Update_UserNotParaments';

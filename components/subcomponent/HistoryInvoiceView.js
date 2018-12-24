@@ -58,7 +58,6 @@ export default class HistoryInvoice extends Component{
         .then((res) => res.json())
         .then((resJson) => {
             if(resJson != null){ // trả về đúng dạng 
-                console.log("json duoc fetch ve: " + JSON.stringify(resJson));
                 this.setState({invoices : resJson.invoices}, function(){
                     // this.setState(totalPrice : resJson.)
                 });
