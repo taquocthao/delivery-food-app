@@ -61,18 +61,22 @@ export default class Registry extends Component{
             })
             .then((response) => response.json())
             .then((responseJson) => {
-                // var userDetails = JSON.stringify(responseJson);
-                // if(userDetails != null){
-                //     AsyncStorage.setItem('userToken', userDetails);
-                //     this.props.navigation.navigate("Home");
-                // }
-                // else {
-                //     Alert.alert("Đăng ký thất bại");
-                // }
-                console.log(responseJson);
+                var userDetails = JSON.stringify(responseJson);
+                if(responseJson.id > 0){
+                   this.SaveUserInfor(userDetails)
+                   .then(()=> {this.props.navigation.navigate("Home")})
+                }
+                else {
+                    Alert.alert("Đăng ký thất bại");
+                }
+                // console.log(responseJson);
             })
             .catch((err) => console.error(err))
         }
+    }
+
+    async SaveUserInfor(userInfo){
+        await AsyncStorage.setItem('userToken', userInfo);
     }
 
     checkPassword(){

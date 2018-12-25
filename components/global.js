@@ -7,4 +7,5 @@ module.exports = {
     deleteCart : null,
     gotoCart : null,
     sendAddress : null,
+    reloadInvoices : null,
 }

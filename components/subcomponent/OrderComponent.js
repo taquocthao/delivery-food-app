@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {
-    View, Text, StyleSheet, AsyncStorage, TouchableOpacity, Alert,
+    View, Text, StyleSheet, AsyncStorage, TouchableOpacity, Alert, FlatList,
 } from 'react-native';
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -20,7 +20,6 @@ export default class Order extends Component{
     constructor(props){
         super(props);
         // this.itemRef = firebaseApp.database();
-
         this.state = {
             userInfor : {},
             cartArray: [],
@@ -31,6 +30,8 @@ export default class Order extends Component{
             visibleShopCart : false,
             address : 'null',
         };
+        //
+        global.sendAddress = this.getAddress.bind(this);
     }
 
     componentDidMount(){
@@ -60,8 +61,6 @@ export default class Order extends Component{
         }
         return null;
     }
-
-    
 
     async getCart(){
         try{
@@ -94,8 +93,13 @@ export default class Order extends Component{
     }
 
     // nhận địa chỉ từ mapview gửi qua cho state address
-    getAddress = (addr) => {
+    // getAddress = (addr) => {
+    //     this.setState({address : addr});
+    // }
+
+    getAddress(addr){
         this.setState({address : addr});
+        // console.log(addr);
     }
 
     // gọi món lên hệ thống
@@ -107,12 +111,6 @@ export default class Order extends Component{
         };
 
         // this.itemRef.ref("Invoices").push(invoice_details);
-
-        //xóa cart
-        // global.deleteCart();
-        // // trở về menu
-        // this.props.navigation.goBack();
-
         fetch(URL_ORDER, 
             {
                 method: 'POST',
@@ -121,16 +119,17 @@ export default class Order extends Component{
                     'Content-Type' : 'application/json',
                 },
                 
-                body: invoice_details
+                body: JSON.stringify(invoice_details)
             }
         ).then((response) => response.json())
         .then(resposeJson => {
-            // console.log(resposeJson.id);
-            if(resposeJson.id <= 0){ //failure
+            // console.log(resposeJson);
+            if(resposeJson.id_invoice <= 0){ //failure
                 Alert.alert("Gọi món thất bại");
-            }else{ //gọi món thành công
+            } else { //gọi món thành công
                 // xóa cart
                 global.deleteCart();
+                global.reloadInvoices();
                 // trở về menu
                 this.props.navigation.goBack();
             }
@@ -155,7 +154,8 @@ export default class Order extends Component{
                     <View style={headerTop}>
                         {/* header left */}
                         <View style={headerLeft}>
-                            <MapView address={this.getAddress}/>
+                            <MapView />
+                            {/* address={this.getAddress} */}
                         </View>
                         {/* header right */}
                         <View style={headerRight}>
@@ -174,7 +174,8 @@ export default class Order extends Component{
                 {/* body */}
                 <View style={body}>
                     {/* body top */}
-                    <View style={bodyTop}>
+                    <View style={bodyTop}>                  
+{/* list  */}
                         {
                             // mỗi phần tử trong mảng sẽ được render ra một view
                             cartArray.map((element, index) => {
@@ -195,13 +196,13 @@ export default class Order extends Component{
                             }
                         })}
                         {/* nếu sản phẩm trong giỏ hàng vượt qua 3 sản phẩm, 
-                            thì hiển thị một link kết để xem các sản phẩm còn lại */}
+                        thì hiển thị một link kết để xem các sản phẩm còn lại  */}
                         <View style={cartArray.length <= 3 ? hidden : showMore}>
                             <TouchableOpacity onPress={() => {this.showShoppingCart()}}> 
                                 <Text style={{color : 'blue'}}>{cartArray.length - 3} phần khác...</Text>
                             </TouchableOpacity>
                         </View>
-                       
+{/* end list */}
                     </View>
                     {/* body bottom */}
                     <View style={bodyBottom}>
@@ -307,12 +308,12 @@ const styles = StyleSheet.create({
         padding: 10,
     },
     bodyTop:{
-        flex: 1,
+        flex: 1.525,
         // borderWidth : 1,
     },
     rowProduct:{
         flex: 1,
-        // height: 50,
+        height: 50,
         flexDirection: 'row',
         margin: 5,
         
@@ -342,7 +343,7 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     bodyBottom:{
-        flex: 1,
+        flex: 1.525,
     },
     row:{
         flex: 1,

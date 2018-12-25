@@ -79,11 +79,24 @@ export default class Profile extends Component{
         })
         .then((response) => response.json())
         .then((responseJson) => {
-            AsyncStorage.clear();
-            AsyncStorage.setItem('userToken', JSON.stringify(responseJson));
-            Alert.alert("Update user", "Cập nhật thành công!");
+            // AsyncStorage.clear();
+            // AsyncStorage.setItem('userToken', JSON.stringify(responseJson));
+            // Alert.alert("Update user", "Cập nhật thành công!");
+            if(responseJson.id > 0){
+                this.saveProfile(JSON.stringify(responseJson))
+                .then(()=> {
+                    Alert.alert("Cập nhật thành công!");
+                });
+            } else {
+                Alert.alert("Cập nhật thất bại!");
+            }
+            // console.log(responseJson);
         })
         .catch((err) => {console.error(err)});
+    }
+
+    async saveProfile(userInfo){
+        await AsyncStorage.setItem('userToken', userInfo);
     }
 
     setGender(){

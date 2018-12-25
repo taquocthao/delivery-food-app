@@ -6,6 +6,8 @@ import {
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {URL_ORDER_HISTORY} from '../Url';
 import ModalViewHistoryOrdered from '../modals/ModalViewHistoryOrdered';
+import global from '../global';
+
 
 export default class HistoryInvoice extends Component{
     constructor(props){
@@ -18,10 +20,15 @@ export default class HistoryInvoice extends Component{
             totalPrice : 0,
             visibleModalViewDetails : false,
             isInvoiceEmpty : false,
-        }
+        };
+        global.reloadInvoices = this.reloadInvoices.bind(this);
     }
 
     componentDidMount(){
+        this.reloadInvoices();
+    }
+
+    reloadInvoices(){
         this.getUserInfor().then((user) => {
             this.setState({userInfor : user});
         })
@@ -36,7 +43,6 @@ export default class HistoryInvoice extends Component{
             }
         })
         .then(()=> this.setState({isLoading: false}));
-        
     }
 
     async getUserInfor(){

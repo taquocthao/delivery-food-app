@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {
-    View, Text, Picker, StyleSheet, TextInput, Dimensions, Alert, TouchableOpacity,
+    View, Text, Picker, StyleSheet, TextInput, Dimensions, TouchableOpacity, ScrollView,
 } from 'react-native';
 
 import {createStackNavigator} from 'react-navigation';
@@ -47,6 +47,7 @@ class Menu extends Component{
         this.setState({
             item : itemValue,
             isSearch : false,
+            
         });
     }
 
@@ -65,11 +66,14 @@ class Menu extends Component{
     render(){
         return (
             // View tổng quát
+           
             <View style={styles.container}>
                 {/* phần đầu của giao diện menu.
                     gồm : bộ tìm kiếm, picker loại sản phẩm
                 */}
+                
                 <View style={styles.header}>
+                <ScrollView>
                     <View style={styles.search}>
                         <Ionicons  name='ios-search' size={32}/>
                         <TextInput 
@@ -90,6 +94,8 @@ class Menu extends Component{
                                 )}
                         </Picker>
                     </View>
+                </ScrollView>
+
                 </View>
                 {/* phần thân: hiển thị danh sách thực phẩm của cửa hàng,
                     nó sẽ hiển thị dựa vào loại sản phẩm mà khách hàng lựa chọn.
@@ -140,7 +146,6 @@ const styles = StyleSheet.create({
         borderColor: 'gray'
     },
     footer:{
-        
         flex: 0.4,
     },
     search:{

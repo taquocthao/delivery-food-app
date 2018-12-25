@@ -12,7 +12,7 @@ import {URL_PRODUCTS_BY_CATEGORY} from '../Url';
 import ModalAddFood from '../modals/ModalAddFood';
 import global from '../global';
 
-export default class FoodList extends Component{
+export default class FoodList extends React.PureComponent{
 
     constructor(props){
         super(props);

@@ -5,12 +5,18 @@ import {
 
 import {URL_TOPSELLER} from '../Url';
 
+
+
+// var numberColumns = Math.round(Dimensions.get('screen').width/150);
+
 export default class TopSeller extends Component{
     constructor(props){
         super(props);
         this.state = {
             dataSource: [],
             isLoading: true,
+            // orientation : 'portrait',
+            // numberColumns : 0,
         }
     }
 
@@ -22,9 +28,26 @@ export default class TopSeller extends Component{
                 this.setState({ 
                     dataSource: responseJson,
                     isLoading: false,
+                    // numberColumns : Math.round(Dimensions.get("window").width/150),
                 })
             })
-            .catch((error) => {console.error(error)})
+            .catch((error) => {console.error(error)});
+            
+    }
+
+    onLayout(){
+        // const {width, height } = Dimensions.get('screen');
+        // if(width > height) {
+        //     this.setState({numberColumns : Math.round(Dimensions.get('screen').width/150)});
+        //     // console.log("landscape" + width);
+        //     // numberColumns = Math.round(Dimensions.get('screen').width/150);
+        //     // console.log(numberColumns);
+        // } else {
+        //     // this.setState({numberColumns : Math.round(Dimensions.get('screen').width/150)});
+        //     // console.log("portrait" + width);
+        //     // numberColumns = Math.round(Dimensions.get('screen').width/150);
+        //     // console.log(numberColumns);
+        // }
     }
     
     renderItem = ({item}) => {
@@ -53,18 +76,20 @@ export default class TopSeller extends Component{
             );
         }
         return (
+           
             <FlatList
                 data={this.state.dataSource}
+                extraData={this.state}
                 keyExtractor={this.keyExtractor}
                 renderItem={this.renderItem}
                 numColumns={numberColumns}
             />
+  
         );
     }
 }
-
-const numberColumns = 3;
-const size = Dimensions.get('window').width/numberColumns;
+const numberColumns = Math.round(Dimensions.get('screen').width/150);
+const size = Dimensions.get('screen').width/numberColumns;
 
 const styles = StyleSheet.create({
     container:{ // style cho ActivityIndicator
@@ -75,11 +100,11 @@ const styles = StyleSheet.create({
     containerBox: {
         width: size,
         height: size,
+        // flex: 1,
     },
     item: {
         flex: 1,
         margin: 5,
-        // backgroundColor: 'lightblue',
         borderWidth: 0.5,
         borderColor: 'gray',
         borderRadius: 5,
@@ -92,7 +117,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     text: {
-        fontSize: 10,
+        fontSize: 11,
         textAlign: 'center',
     }
 });

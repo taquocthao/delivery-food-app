@@ -52,9 +52,10 @@ export default class Login extends Component{
                 if(responseJson !== null){
                     this.setState({ userDetails : JSON.stringify(responseJson),}, function(){
                         // luư thông tin user và đi đến trang chủ
+                        // console.log(responseJson);
                         this._saveUserDetails()
                         .then( () => this.setState({isLoading: false}))
-                        .then(() => this.props.navigation.navigate("Home"))
+                        .then(() => this.props.navigation.navigate("Home"));
                     });
                 } else {
                     // console.log("failure")

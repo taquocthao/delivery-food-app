@@ -13,27 +13,10 @@ import ForgetPasswordScreen from './components/authentication/ForgetPassword';
 import MenuScreen from './components/mainform/Menu';
 // import LoadingMenuScreen from './components/loading_component/LoadingMenu';
 
-
-
-
 class AuthLoadingScreen extends Component{
     constructor(props){
         super(props);
-        // this._bootstrapAsync();
-    }
-
-    componentWillMount(){
-        NetInfo.getConnectionInfo().then((connectionInfo) => {
-            // console.log('Initial, type: ' + connectionInfo.type + ', effectiveType: ' + connectionInfo.effectiveType);
-            if(connectionInfo.type == 'none' || connectionInfo.type == 'unknown'){
-                console.log("disconnected");
-                
-            } else {
-                // this.props.navigation.navigate("App");
-                console.log("connected");
-                this._bootstrapAsync();
-            }
-          });
+        this._bootstrapAsync();
     }
 
     _bootstrapAsync = async () => {
@@ -73,7 +56,8 @@ const AppStack = createStackNavigator({
         headerMode: 'none',
         navigationOptions:{
             header : null,
-        }
+        },
+ 
     }
 
 );
@@ -87,6 +71,7 @@ export default createSwitchNavigator(
   },
   {
       initialRouteName: 'AuthLoading',
+      portraitOnlyMode: true 
   },
 );
  
