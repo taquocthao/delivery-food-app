@@ -8,6 +8,7 @@ import {URL_ORDER_HISTORY} from '../Url';
 import ModalViewHistoryOrdered from '../modals/ModalViewHistoryOrdered';
 import global from '../global';
 
+// import {firebaseApp} from '../firebaseConfig';
 
 export default class HistoryInvoice extends Component{
     constructor(props){
@@ -22,10 +23,14 @@ export default class HistoryInvoice extends Component{
             isInvoiceEmpty : false,
         };
         global.reloadInvoices = this.reloadInvoices.bind(this);
+        // this.itemRef = firebaseApp.database();
     }
 
     componentDidMount(){
         this.reloadInvoices();
+        // this.itemRef.ref("id_user").on('value', function(snapshot){
+        //     console.log(snapshot.val());
+        // });
     }
 
     reloadInvoices(){

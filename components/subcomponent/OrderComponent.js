@@ -12,8 +12,6 @@ import global from '../global';
 // import url goi món
 import {URL_ORDER} from '../Url'
 
-// import firebase from 'react-native-firebase';
-// import {firebaseApp} from '../firebaseConfig';
 
 export default class Order extends Component{
 
@@ -118,22 +116,32 @@ export default class Order extends Component{
                     'Accept' : 'application/json',
                     'Content-Type' : 'application/json',
                 },
-                
                 body: JSON.stringify(invoice_details)
             }
-        ).then((response) => response.json())
-        .then(resposeJson => {
-            // console.log(resposeJson);
-            if(resposeJson.id_invoice <= 0){ //failure
-                Alert.alert("Gọi món thất bại");
-            } else { //gọi món thành công
+        ).then((response) => 
+            {
                 // xóa cart
                 global.deleteCart();
-                global.reloadInvoices();
                 // trở về menu
                 this.props.navigation.goBack();
+                global.reloadInvoices();
+                // console.log("goi mon " +response);
             }
-        })
+        )
+        // .then(resposeJson => {
+        //     console.log(resposeJson);
+        //     // if(resposeJson.id_invoice <= 0){ //failure
+        //     //     Alert.alert("Gọi món thất bại");
+        //     // } else { 
+        //         //gọi món thành công
+        //         // xóa cart
+        //         global.deleteCart();
+        //         // trở về menu
+        //         this.props.navigation.goBack();
+        //         // global.reloadInvoices();
+                
+        //     // }
+        // })
         .catch(err => console.log(err));
     }
 
